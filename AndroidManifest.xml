@@ -9,18 +9,15 @@
         <activity android:name=".LoginActivity"
                   android:label="@string/app_name"
                   android:noHistory="true">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>-->
-        </activity>
-        <activity android:name=".DashboardActivity"/>
-        <activity android:name=".ProductsActivity"/>
-        <activity android:name=".FamilyMembersActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".DashboardActivity"/>
+        <activity android:name=".ProductsActivity"/>
+        <activity android:name=".FamilyMembersActivity">
+        </activity>
+        <activity android:name=".UsageActivity"/>
     </application>
 </manifest>

@@ -19,7 +19,7 @@ import com.google.gson.Gson;
  * Time: 7:02 PM
  * To change this template use File | Settings | File Templates.
  */
-public class DashboardActivity extends Activity implements Callback {
+public class DashboardActivity extends Activity implements Callback, View.OnClickListener {
 
   ListView listView;
   private TextView showFamilyMembers;
@@ -29,6 +29,8 @@ public class DashboardActivity extends Activity implements Callback {
     setContentView(R.layout.dashboard);
     listView = (ListView) findViewById(R.id.list_smarthub);
     showFamilyMembers = (TextView) findViewById(R.id.show_family_members);
+    showFamilyMembers.setOnClickListener(this);
+    getActionBar().setTitle("Inventory Data");
     User user = new Gson().fromJson(getIntent().getStringExtra("user"), User.class);
     new WebserviceHelper(this).execute("http://premapp.azure-mobile.net/tables/smarthub?" +
         "$filter=(user_id+eq+" + user.getID() + ")");
@@ -42,6 +44,21 @@ public class DashboardActivity extends Activity implements Callback {
     } else {
       Toast.makeText(this, "Problem connection to server", Toast.LENGTH_SHORT).show();
     }
+  }
+
+  @Override
+  public void onClick(View v) {
+    int id = v.getId();
+    switch (id) {
+      case R.id.show_family_members:
+        callFamilyMembersActivity();
+        break;
+    }
+  }
+
+  private void callFamilyMembersActivity() {
+    Intent intent = new Intent(this, FamilyMembersActivity.class);
+    startActivity(intent);
   }
 
   private class SmartHubAdapter extends BaseAdapter {

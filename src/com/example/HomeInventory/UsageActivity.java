@@ -14,36 +14,36 @@ import android.widget.TextView;
  * Created with IntelliJ IDEA.
  * User: ehc
  * Date: 19/9/14
- * Time: 5:18 PM
+ * Time: 6:11 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FamilyMembersActivity extends Activity {
-  String[] names = {"Karna", "Rama Krishna", "RK", "Prem"};
-  private ListView familyMembersList;
+public class UsageActivity extends Activity {
+  String[] usageDates = {"sep 19 2014", "36%", "used 15%"};
+  private ListView itemUsageListView;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.family_members_layout);
-    familyMembersList = (ListView) findViewById(R.id.family_members_listView);
+    setContentView(R.layout.usage_view);
     getActionBar().setTitle("Family Members");
-    familyMembersList.setAdapter(new FamilyMembersAdapter(getApplicationContext()));
+    itemUsageListView = (ListView) findViewById(R.id.item_usage_list_view);
+    itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
   }
 
-  private class FamilyMembersAdapter extends BaseAdapter {
+  private class ItemUsageListAdapter extends BaseAdapter {
     Context context;
 
-    public FamilyMembersAdapter(Context applicationContext) {
+    public ItemUsageListAdapter(Context applicationContext) {
       context = applicationContext;
     }
 
     @Override
     public int getCount() {
-      return names.length;
+      return usageDates.length;
     }
 
     @Override
     public Object getItem(int position) {
-      return names[position];
+      return usageDates[position];
     }
 
     @Override
@@ -56,7 +56,7 @@ public class FamilyMembersActivity extends Activity {
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       View view = inflater.inflate(R.layout.family_members_child_layout, null);
       TextView name = (TextView) view.findViewById(R.id.family_member_name);
-      name.setText(names[position]);
+      name.setText(usageDates[position]);
       return view;
     }
   }
