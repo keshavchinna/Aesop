@@ -21,6 +21,10 @@ public class LoginActivity extends Activity implements Callback {
     setContentView(R.layout.login);
     inputKey = (EditText) findViewById(R.id.pin_input);
     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+    applyActionOnDone();
+  }
+
+  private void applyActionOnDone() {
     inputKey.setOnEditorActionListener(new EditText.OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
