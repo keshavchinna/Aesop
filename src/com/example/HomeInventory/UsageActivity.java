@@ -18,13 +18,15 @@ import android.widget.TextView;
  * To change this template use File | Settings | File Templates.
  */
 public class UsageActivity extends Activity {
-  String[] usageDates = {"sep 19 2014", "36%", "used 15%"};
+  String[] usageDates = {"Present", "sep 19 2014", "sep 18 2014", "sep 17 2014", "sep 16 2014"};
+  String[] amountPercentage = {"20%", "36%", "28%", "35%", "25%"};
+  String[] usedPercentage = {"", "10%", "15%", "18%", "13%"};
   private ListView itemUsageListView;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.usage_view);
-    getActionBar().setTitle("Family Members");
+    getActionBar().setTitle("Coffee");
     itemUsageListView = (ListView) findViewById(R.id.item_usage_list_view);
     itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
   }
@@ -54,9 +56,13 @@ public class UsageActivity extends Activity {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      View view = inflater.inflate(R.layout.family_members_child_layout, null);
-      TextView name = (TextView) view.findViewById(R.id.family_member_name);
-      name.setText(usageDates[position]);
+      View view = inflater.inflate(R.layout.usage_child_layout, null);
+      TextView date = (TextView) view.findViewById(R.id.date);
+      TextView amountPercent = (TextView) view.findViewById(R.id.amount_percent);
+      TextView usedPercent = (TextView) view.findViewById(R.id.used_percent);
+      date.setText(usageDates[position]);
+      amountPercent.setText(amountPercentage[position]);
+      usedPercent.setText(usedPercentage[position]);
       return view;
     }
   }
