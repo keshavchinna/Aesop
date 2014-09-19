@@ -2,11 +2,13 @@ package com.example.HomeInventory;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,18 +19,36 @@ import android.widget.TextView;
  * Time: 6:11 PM
  * To change this template use File | Settings | File Templates.
  */
-public class UsageActivity extends Activity {
+public class UsageActivity extends Activity implements View.OnClickListener {
   String[] usageDates = {"Present", "sep 19 2014", "sep 18 2014", "sep 17 2014", "sep 16 2014"};
   String[] amountPercentage = {"20%", "36%", "28%", "35%", "25%"};
   String[] usedPercentage = {"", "10%", "15%", "18%", "13%"};
   private ListView itemUsageListView;
+  private Button orderButton;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.usage_view);
     getActionBar().setTitle("Coffee");
     itemUsageListView = (ListView) findViewById(R.id.item_usage_list_view);
+    orderButton = (Button) findViewById(R.id.order_button);
+    orderButton.setOnClickListener(this);
     itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
+  }
+
+  @Override
+  public void onClick(View v) {
+    int id = v.getId();
+    switch (id) {
+      case R.id.order_button:
+        callOrdersPortals();
+        break;
+    }
+  }
+
+  private void callOrdersPortals() {
+    Intent intent = new Intent(this, AvailablePortals.class);
+    startActivity(intent);
   }
 
   private class ItemUsageListAdapter extends BaseAdapter {

@@ -4,36 +4,33 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-   <!-- <RelativeLayout
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp">
-
-        <TextView
-                android:layout_width="wrap_content"
+            android:layout_weight="3">
+        <ListView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Present"
-                android:layout_alignParentLeft="true"
-                android:id="@+id/amount_percent"
-                android:layout_gravity="center"/>
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="25%"
-                android:id="@+id/used_percent"
-                android:layout_margin="4dp"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"/>
-    </RelativeLayout>-->
-    <ListView
+                android:id="@+id/item_usage_list_view"
+                android:dividerHeight="1dp"
+                android:scrollbars="none"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                />
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/item_usage_list_view"
-            android:dividerHeight="1dp"
-            android:scrollbars="none"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            />
+            android:layout_weight="1">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Order"
+                android:id="@+id/order_button"
+                android:layout_gravity="center"/>
+    </LinearLayout>
 </LinearLayout>
