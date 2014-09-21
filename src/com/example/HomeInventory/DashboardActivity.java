@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.widget.*;
 import com.google.gson.Gson;
 
@@ -27,6 +25,9 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
   private Inventory[] inventories;
   private LinearLayout rootLinearLayout;
   private ProgressBar inventoryLoading;
+  private Menu menu;
+  private int smartHubPosition;
+  private User user;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -34,19 +35,23 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
     getActionBar().setTitle("Inventory Data");
     getWidgetIds();
     applyActions();
-    User user = new Gson().fromJson(getIntent().getStringExtra("user"), User.class);
+    user = new Gson().fromJson(getIntent().getStringExtra("user"), User.class);
     Log.d("test2", "userID:" + user.getId());
     inventoryLoading.setVisibility(View.VISIBLE);
+    callSmartHubWebservice(user);
+  }
+
+  private void callSmartHubWebservice(User user) {
     new WebserviceHelper(this, "smarthub").execute("https://aesop.azure-mobile.net/tables/smarthub?" +
         "$filter=(user_id+eq+'" + user.getId() + "')");
   }
 
   private void populateInventoryData(Inventory[] inventories) {
 //    for (int j = 0; j < smartHubs.length; j++) {
-    int k = 0;
+
     LinearLayout customLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_layout, null);
     TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
-    smartHubName.setText(smartHubs[k++].getLocation());
+    smartHubName.setText(smartHubs[smartHubPosition++].getLocation());
     for (int i = 0; i < inventories.length; i++) {
       RelativeLayout v = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.custom, null);
       itemName = (TextView) v.findViewById(R.id.item_name);
@@ -94,6 +99,25 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
     }
   }
 
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    this.menu = menu;
+    MenuInflater inflater = new MenuInflater(getBaseContext());
+    inflater.inflate(R.menu.dashboard_menu, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    if (item.getItemId() == R.id.refresh) {
+      inventoryLoading.setVisibility(View.VISIBLE);
+      smartHubPosition = 0;
+      rootLinearLayout.removeAllViewsInLayout();
+      callSmartHubWebservice(user);
+    }
+    return super.onMenuItemSelected(featureId, item);
+  }
+
   private void callFamilyMembersActivity() {
     Intent intent = new Intent(this, FamilyMembersActivity.class);
     startActivity(intent);
@@ -106,9 +130,8 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
   @Override
   public void smartHubCallBack(String json) {
     if (json != null) {
-      if (json.isEmpty()) {
+      if (!json.isEmpty()) {
         Log.d("test2", "SmartHUbJson:" + json);
-        inventoryLoading.setVisibility(View.GONE);
         smartHubs = new Gson().fromJson(json, SmartHub[].class);
         for (SmartHub smartHub : smartHubs) {
           Log.d("test2", "SmartHub size:" + smartHubs.length);
@@ -133,11 +156,20 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
   public void inventoryCallBack(String json) {
     Log.d("test2", "Inventory: " + json.toString());
     if (json != null) {
+      // if (!json.isEmpty()) {
       inventories = new Gson().fromJson(json, Inventory[].class);
       populateInventoryData(inventories);
+      /*} else {
+        Toast toast = Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+      }*/
     } else {
-      Toast.makeText(this, "Problem connection to server", Toast.LENGTH_SHORT).show();
+      Toast toast = Toast.makeText(this, "Problem Connecting to Server", Toast.LENGTH_SHORT);
+      toast.setGravity(Gravity.CENTER, 0, 0);
+      toast.show();
     }
+    inventoryLoading.setVisibility(View.GONE);
   }
 
  /* private class SmartHubAdapter extends BaseAdapter {
