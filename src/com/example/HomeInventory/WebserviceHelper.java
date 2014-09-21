@@ -4,7 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.Gravity;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -23,12 +25,19 @@ public class WebserviceHelper extends AsyncTask {
   private final String tableName;
   private final Context context;
   Callback callback;
+  private ProgressBar progressBar;
   private boolean netWorkConnected = true;
 
   public WebserviceHelper(Context context, Callback callback, String tableName) {
     this.context = context;
     this.callback = callback;
     this.tableName = tableName;
+  }
+
+  public WebserviceHelper(Context applicationContext, ProgressBar itemProgressBar, String tableName) {
+    this.context = applicationContext;
+    this.tableName = tableName;
+    progressBar = itemProgressBar;
   }
 
   @Override
@@ -78,7 +87,21 @@ public class WebserviceHelper extends AsyncTask {
           callback.smartHubCallBack((String) o);
           break;
         case "inventory":
-          callback.inventoryCallBack((String) o);
+          if ((String) o != null) {
+            if (!((String) o).isEmpty()) {
+              Inventory[] inventories = new Gson().fromJson((String) o, Inventory[].class);
+              if (inventories.length > 0) {
+                Log.d("test3", "sensorValue: " + inventories[0].getValue());
+                progressBar.setProgress(inventories[0].getValue());
+                if (inventories[0].getValue() < 20)
+                  progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.red_color));
+                //callback.inventoryCallBack((String) o);
+              }
+            }
+          }
+          break;
+        case "sensor":
+          callback.sensorCallBack((String) o);
           break;
       }
     }

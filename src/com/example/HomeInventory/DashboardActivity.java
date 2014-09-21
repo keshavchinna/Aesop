@@ -28,6 +28,7 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
   private Menu menu;
   private int smartHubPosition;
   private User user;
+  private Sensor[] sensors;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -46,14 +47,14 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
         "$filter=(user_id+eq+'" + user.getId() + "')");
   }
 
-  private void populateInventoryData(Inventory[] inventories) {
+  private void populateInventoryData(Sensor[] sensors) {
 //    for (int j = 0; j < smartHubs.length; j++) {
 
     LinearLayout customLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_layout, null);
     TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
     smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase() + " (" + smartHubs[smartHubPosition].getLocation().toUpperCase() + ")");
     smartHubPosition++;
-    for (int i = 0; i < inventories.length; i++) {
+    for (int i = 0; i < sensors.length; i++) {
       RelativeLayout v = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.custom, null);
       itemName = (TextView) v.findViewById(R.id.item_name);
       itemProgressBar = (ProgressBar) v.findViewById(R.id.item_progress);
@@ -63,10 +64,13 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
           callItemDetails();
         }
       });
-      itemName.setText(inventories[i].getProduct_name());
-      itemProgressBar.setProgress(inventories[i].getValue());
-      if (inventories[i].getValue() < 20)
-        itemProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.red_color));
+      itemName.setText(sensors[i].getProduct_name());
+      new WebserviceHelper(getApplicationContext(), itemProgressBar, "inventory").execute("https://aesop.azure-mobile.net/tables/inventory?" +
+          "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')");
+
+      /*itemProgressBar.setProgress(inventories[0].getValue());
+      if (inventories[0].getValue() < 20)
+        itemProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.red_color));*/
       customLayout.addView(v);
     }
     rootLinearLayout.addView(customLayout);
@@ -159,15 +163,13 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
   public void inventoryCallBack(String json) {
     Log.d("test2", "Inventory: " + json.toString());
     if (json != null) {
-      // if (!json.isEmpty()) {
-      inventories = new Gson().fromJson(json, Inventory[].class);
-
-     // populateInventoryData(inventories);
-      /*} else {
+      if (!json.isEmpty()) {
+        inventories = new Gson().fromJson(json, Inventory[].class);
+      } else {
         Toast toast = Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
-      }*/
+      }
     } else {
       Toast toast = Toast.makeText(this, "Problem Connecting to Server", Toast.LENGTH_SHORT);
       toast.setGravity(Gravity.CENTER, 0, 0);
@@ -177,68 +179,22 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
   }
 
   @Override
-  public void sensorCallBack(String json) {
-    Log.d("test2", "sensor: " + json.toString());
-    if (json != null) {
-      // if (!json.isEmpty()) {
-      inventories = new Gson().fromJson(json, Inventory[].class);
-
-      populateInventoryData(inventories);
-      /*} else {
-        Toast toast = Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT);
+  public void sensorCallBack(String o) {
+    Log.d("test2", "sensor: " + o.toString());
+    if (o != null) {
+      if (!o.isEmpty()) {
+        sensors = new Gson().fromJson(o, Sensor[].class);
+       /* for (Sensor sensor : sensors) {
+          new WebserviceHelper(getApplicationContext(), this, "inventory").execute("https://aesop.azure-mobile.net/tables/inventory?" +
+              "$filter=(sensor_id+eq+'" + sensor.getId() + "')");
+        }*/
+        populateInventoryData(sensors);
+      } else {
+        Toast toast = Toast.makeText(this, "Problem Connecting to Server", Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
-      }*/
-    } else {
-      Toast toast = Toast.makeText(this, "Problem Connecting to Server", Toast.LENGTH_SHORT);
-      toast.setGravity(Gravity.CENTER, 0, 0);
-      toast.show();
-    }
-    inventoryLoading.setVisibility(View.GONE);
-    /*new WebserviceHelper(getApplicationContext(), this, "inventory").execute("https://aesop.azure-mobile.net/tables/inventory?" +
-        "$filter=(smarthub_id+eq+'" + smartHub.getId() + "')");*/
-  }
-
- /* private class SmartHubAdapter extends BaseAdapter {
-    private SmartHub[] smartHubs;
-    private Context context;
-
-    public SmartHubAdapter(SmartHub[] smartHubs, Context context) {
-      this.smartHubs = smartHubs;
-      this.context = context;
-    }
-
-    @Override
-    public int getCount() {
-      return smartHubs.length;
-    }
-
-    @Override
-    public Object getItem(int position) {
-      return position;
-    }
-
-    @Override
-    public long getItemId(int position) {
-      return 0;
-    }
-
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-      TextView textView = new TextView(context);
-      textView.setText(smartHubs[position].getName());
-      textView.setClickable(true);
-      textView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          Intent intent = new Intent(context, ProductsActivity.class);
-          intent.putExtra("smarthub", new Gson().toJson(smartHubs[position]));
-          startActivity(intent);
-        }
-      });
-      return textView;
+      }
+      inventoryLoading.setVisibility(View.GONE);
     }
   }
-*/
-
 }
