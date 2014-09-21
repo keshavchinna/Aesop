@@ -100,6 +100,9 @@ public class WebserviceHelper extends AsyncTask {
             }
           }
           break;
+        case "productDetails":
+          callback.inventoryCallBack((String) o);
+          break;
         case "sensor":
           callback.sensorCallBack((String) o);
           break;

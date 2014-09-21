@@ -47,7 +47,7 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
         "$filter=(user_id+eq+'" + user.getId() + "')");
   }
 
-  private void populateInventoryData(Sensor[] sensors) {
+  private void populateInventoryData(final Sensor[] sensors) {
 //    for (int j = 0; j < smartHubs.length; j++) {
 
     LinearLayout customLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_layout, null);
@@ -55,13 +55,15 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
     smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase() + " (" + smartHubs[smartHubPosition].getLocation().toUpperCase() + ")");
     smartHubPosition++;
     for (int i = 0; i < sensors.length; i++) {
+      final int temp = i;
       RelativeLayout v = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.custom, null);
       itemName = (TextView) v.findViewById(R.id.item_name);
       itemProgressBar = (ProgressBar) v.findViewById(R.id.item_progress);
+      final int finalI = i;
       itemProgressBar.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          callItemDetails();
+          callItemDetails(sensors[temp]);
         }
       });
       itemName.setText(sensors[i].getProduct_name());
@@ -89,8 +91,10 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
     inventoryLoading = (ProgressBar) findViewById(R.id.inventory_loading);
   }
 
-  private void callItemDetails() {
+  private void callItemDetails(Sensor sensor) {
     Intent intent = new Intent(this, UsageActivity.class);
+    intent.putExtra("productName", sensor.getProduct_name());
+    intent.putExtra("sensorId", sensor.getId());
     startActivity(intent);
   }
 

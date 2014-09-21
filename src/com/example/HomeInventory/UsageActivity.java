@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
+import com.google.gson.Gson;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,21 +19,24 @@ import android.widget.TextView;
  * Time: 6:11 PM
  * To change this template use File | Settings | File Templates.
  */
-public class UsageActivity extends Activity implements View.OnClickListener {
+public class UsageActivity extends Activity implements View.OnClickListener, Callback {
   String[] usageDates = {"Present", "sep 19 2014", "sep 18 2014", "sep 17 2014", "sep 16 2014"};
   String[] amountPercentage = {"20%", "36%", "48%", "65%", "85%"};
   String[] usedPercentage = {"", "16%", "12%", "17%", "13%"};
   private ListView itemUsageListView;
   private Button orderButton;
+  private Inventory[] inventories;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.usage_view);
-    getActionBar().setTitle("Coffee");
+    getActionBar().setTitle(getIntent().getStringExtra("productName"));
+    new WebserviceHelper(getApplicationContext(), this, "productDetails").execute("https://aesop.azure-mobile.net/tables/inventory?" +
+        "$filter=(sensor_id+eq+'" + getIntent().getStringExtra("sensorId") + "')&__systemProperties=updatedAt&$orderby=__updatedAt%20desc");
     itemUsageListView = (ListView) findViewById(R.id.item_usage_list_view);
     orderButton = (Button) findViewById(R.id.order_button);
     orderButton.setOnClickListener(this);
-    itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
+
   }
 
   @Override
@@ -51,6 +54,39 @@ public class UsageActivity extends Activity implements View.OnClickListener {
     startActivity(intent);
   }
 
+  @Override
+  public void userCallBack(String o) {
+  }
+
+  @Override
+  public void smartHubCallBack(String o) {
+  }
+
+  @Override
+  public void inventoryCallBack(String json) {
+    Log.d("test2", "Inventory: " + json.toString());
+    if (json != null) {
+      if (!json.isEmpty()) {
+        inventories = new Gson().fromJson(json, Inventory[].class);
+        itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
+
+      } else {
+        Toast toast = Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+      }
+    } else {
+      Toast toast = Toast.makeText(this, "Problem Connecting to Server", Toast.LENGTH_SHORT);
+      toast.setGravity(Gravity.CENTER, 0, 0);
+      toast.show();
+    }
+    //inventoryLoading.setVisibility(View.GONE);
+  }
+
+  @Override
+  public void sensorCallBack(String o) {
+  }
+
   private class ItemUsageListAdapter extends BaseAdapter {
     Context context;
 
@@ -60,12 +96,12 @@ public class UsageActivity extends Activity implements View.OnClickListener {
 
     @Override
     public int getCount() {
-      return usageDates.length;
+      return inventories.length;
     }
 
     @Override
     public Object getItem(int position) {
-      return usageDates[position];
+      return inventories[position];
     }
 
     @Override
@@ -79,10 +115,11 @@ public class UsageActivity extends Activity implements View.OnClickListener {
       View view = inflater.inflate(R.layout.usage_child_layout, null);
       TextView date = (TextView) view.findViewById(R.id.date);
       TextView amountPercent = (TextView) view.findViewById(R.id.amount_percent);
-      TextView usedPercent = (TextView) view.findViewById(R.id.used_percent);
-      date.setText(usageDates[position]);
-      amountPercent.setText(amountPercentage[position]);
-      usedPercent.setText(usedPercentage[position]);
+      //TextView usedPercent = (TextView) view.findViewById(R.id.used_percent);
+      Log.d("test3", "updatedAt: " + inventories[position].get__updatedAt());
+      date.setText(inventories[position].get__updatedAt());
+      amountPercent.setText("" + inventories[position].getValue());
+      //  usedPercent.setText("30%");
       return view;
     }
   }

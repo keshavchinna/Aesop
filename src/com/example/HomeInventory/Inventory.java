@@ -17,11 +17,21 @@ public class Inventory {
   @Expose
   private String smarthub_id;
   @Expose
+  private String __updatedAt;
+  @Expose
   private int value;
   @Expose
   private String product_name;
   @Expose
   private String product_type;
+
+  public String get__updatedAt() {
+    return __updatedAt;
+  }
+
+  public void set__updatedAt(String __updatedAt) {
+    this.__updatedAt = __updatedAt;
+  }
 
   public String getId() {
     return id;
