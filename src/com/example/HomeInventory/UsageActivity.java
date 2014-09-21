@@ -21,8 +21,8 @@ import android.widget.TextView;
  */
 public class UsageActivity extends Activity implements View.OnClickListener {
   String[] usageDates = {"Present", "sep 19 2014", "sep 18 2014", "sep 17 2014", "sep 16 2014"};
-  String[] amountPercentage = {"20%", "36%", "28%", "35%", "25%"};
-  String[] usedPercentage = {"", "10%", "15%", "18%", "13%"};
+  String[] amountPercentage = {"20%", "36%", "48%", "65%", "85%"};
+  String[] usedPercentage = {"", "16%", "12%", "17%", "13%"};
   private ListView itemUsageListView;
   private Button orderButton;
 

@@ -12,7 +12,7 @@ public class MyActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.main);
+    setContentView(R.layout.inventory_dashboard);
     LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linear);
     for (int j = 0; j < 5; j++) {
       LinearLayout customLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_layout, null);

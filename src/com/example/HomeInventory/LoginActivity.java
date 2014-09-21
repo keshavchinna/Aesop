@@ -3,10 +3,13 @@ package com.example.HomeInventory;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
@@ -14,12 +17,14 @@ import com.google.gson.Gson;
 public class LoginActivity extends Activity implements Callback {
 
   EditText inputKey;
+  private ProgressBar authentiCationProgressBar;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.login);
     inputKey = (EditText) findViewById(R.id.pin_input);
+    authentiCationProgressBar = (ProgressBar) findViewById(R.id.authenticate_progress);
     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     applyActionOnDone();
   }
@@ -30,11 +35,12 @@ public class LoginActivity extends Activity implements Callback {
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if ((actionId == EditorInfo.IME_ACTION_DONE)) {
           String input = inputKey.getText().toString();
-          if (input == null || input.length() < 4) {
-            inputKey.setError("Input shouln't less than 4 letters");
+          if (input.length() < 4) {
+            inputKey.setError("Enter Four Digit PIN Number");
           } else {
+            authentiCationProgressBar.setVisibility(View.VISIBLE);
             new WebserviceHelper(LoginActivity.this).execute(
-                "http://premapp.azure-mobile.net/tables/user?" +
+                "https://aesop.azure-mobile.net/tables/user?" +
                     "$filter=(pin+eq+'" + input + "')");
           }
         }
@@ -50,10 +56,18 @@ public class LoginActivity extends Activity implements Callback {
       if (users.length > 0) {
         Intent intent = new Intent(this, DashboardActivity.class);
         intent.putExtra("user", new Gson().toJson(users[0]));
+        authentiCationProgressBar.setVisibility(View.GONE);
         startActivity(intent);
+      } else {
+        Toast toast = Toast.makeText(this, "Please Check Your PIN Number", Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+        authentiCationProgressBar.setVisibility(View.GONE);
       }
 
+
     } else {
+      authentiCationProgressBar.setVisibility(View.GONE);
       Toast.makeText(this, "Problem connection to server", Toast.LENGTH_SHORT).show();
     }
   }

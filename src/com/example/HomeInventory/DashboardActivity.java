@@ -21,20 +21,33 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
 
   ListView listView;
   String[] smartHubs = {"Home", "Office"};
+  String[] items = {"Milk", "Coffee", "Sugar"};
   private TextView showFamilyMembers;
+  private TextView itemName;
+  private ProgressBar itemProgressBar;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.main);
+    setContentView(R.layout.inventory_dashboard);
     //listView = (ListView) findViewById(R.id.list_smarthub);
     showFamilyMembers = (TextView) findViewById(R.id.show_family_members_list);
     LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linear);
-    for (int j = 0; j < 2; j++) {
+    for (int j = 0; j <2; j++) {
       LinearLayout customLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_layout, null);
       TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
       smartHubName.setText(smartHubs[j]);
       for (int i = 0; i < 2; i++) {
-        LinearLayout v = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom, null);
+        RelativeLayout v = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.custom, null);
+        itemName = (TextView) v.findViewById(R.id.item_name);
+        itemProgressBar = (ProgressBar) v.findViewById(R.id.item_progress);
+        itemProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.green_color));
+        itemProgressBar.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            callItemDetails();
+          }
+        });
+        itemName.setText(items[i]);
         customLayout.addView(v);
       }
       linearLayout.addView(customLayout);
@@ -46,6 +59,11 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
     User user = new Gson().fromJson(getIntent().getStringExtra("user"), User.class);
     new WebserviceHelper(this).execute("http://premapp.azure-mobile.net/tables/smarthub?" +
         "$filter=(user_id+eq+" + user.getID() + ")");
+  }
+
+  private void callItemDetails() {
+    Intent intent = new Intent(this, UsageActivity.class);
+    startActivity(intent);
   }
 
   @Override
