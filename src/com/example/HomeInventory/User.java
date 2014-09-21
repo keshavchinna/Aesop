@@ -13,36 +13,45 @@ import com.google.gson.annotations.SerializedName;
 
 public class User {
 
-    @SerializedName("ID")
-    @Expose
-    private Integer iD;
-    @Expose
-    private String name;
-    @Expose
-    private String pin;
+  @SerializedName("id")
+  @Expose
+  private String id;
+  @Expose
+  private String name;
+  @Expose
+  private String pin;
 
-    public Integer getID() {
-        return iD;
-    }
+  @Override
+  public String toString() {
+    return "User{" +
+        "id='" + id + '\'' +
+        ", name='" + name + '\'' +
+        ", pin='" + pin + '\'' +
+        '}';
+  }
 
-    public void setID(Integer iD) {
-        this.iD = iD;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getPin() {
-        return pin;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setPin(String pin) {
-        this.pin = pin;
-    }
+  public String getPin() {
+    return pin;
+  }
+
+  public void setPin(String pin) {
+    this.pin = pin;
+  }
 
 }

@@ -39,7 +39,7 @@ public class LoginActivity extends Activity implements Callback {
             inputKey.setError("Enter Four Digit PIN Number");
           } else {
             authentiCationProgressBar.setVisibility(View.VISIBLE);
-            new WebserviceHelper(LoginActivity.this).execute(
+            new WebserviceHelper(LoginActivity.this, "user").execute(
                 "https://aesop.azure-mobile.net/tables/user?" +
                     "$filter=(pin+eq+'" + input + "')");
           }
@@ -50,7 +50,7 @@ public class LoginActivity extends Activity implements Callback {
   }
 
   @Override
-  public void callback(String json) {
+  public void userCallBack(String json) {
     if (json != null) {
       User[] users = new Gson().fromJson(json, User[].class);
       if (users.length > 0) {
@@ -64,11 +64,17 @@ public class LoginActivity extends Activity implements Callback {
         toast.show();
         authentiCationProgressBar.setVisibility(View.GONE);
       }
-
-
     } else {
       authentiCationProgressBar.setVisibility(View.GONE);
       Toast.makeText(this, "Problem connection to server", Toast.LENGTH_SHORT).show();
     }
+  }
+
+  @Override
+  public void smartHubCallBack(String o) {
+  }
+
+  @Override
+  public void inventoryCallBack(String o) {
   }
 }

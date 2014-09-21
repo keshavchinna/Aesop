@@ -1,5 +1,8 @@
 package com.example.HomeInventory;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ehc
@@ -9,31 +12,55 @@ package com.example.HomeInventory;
  */
 public class SmartHub {
 
-    private int iD;
-    private int user_id;
-    private String name;
+  @SerializedName("id")
+  @Expose
+  private String id;
+  @Expose
+  private String user_id;
+  @Expose
+  private String name;
+  @Expose
+  private String location;
 
-    public int getId() {
-        return iD;
-    }
+  @Override
+  public String toString() {
+    return "SmartHub{" +
+        "id='" + id + '\'' +
+        ", user_id='" + user_id + '\'' +
+        ", name='" + name + '\'' +
+        ", location='" + location + '\'' +
+        '}';
+  }
 
-    public void setId(int id) {
-        this.iD = id;
-    }
+  public String getLocation() {
+    return location;
+  }
 
-    public int getUser_id() {
-        return user_id;
-    }
+  public void setLocation(String location) {
+    this.location = location;
+  }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getUser_id() {
+    return user_id;
+  }
+
+  public void setUser_id(String user_id) {
+    this.user_id = user_id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
 }

@@ -8,5 +8,7 @@ package com.example.HomeInventory;
  * To change this template use File | Settings | File Templates.
  */
 public interface Callback {
-    public void callback(String o);
+    public void userCallBack(String o);
+    public void smartHubCallBack(String o);
+    public void inventoryCallBack(String o);
 }

@@ -1,5 +1,8 @@
 package com.example.HomeInventory;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ehc
@@ -8,50 +11,66 @@ package com.example.HomeInventory;
  * To change this template use File | Settings | File Templates.
  */
 public class Inventory {
+  @SerializedName("id")
+  @Expose
+  private String id;
+  @Expose
+  private String smarthub_id;
+  @Expose
+  private int value;
+  @Expose
+  private String product_name;
+  @Expose
+  private String product_type;
 
-    private int id;
-    private int smarthub_id;
-    private int sensor_id;
-    private int value;
-    private String product_name;
+  public String getId() {
+    return id;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  @Override
+  public String toString() {
+    return "Inventory{" +
+        "id='" + id + '\'' +
+        ", smarthub_id='" + smarthub_id + '\'' +
+        ", value=" + value +
+        ", product_name='" + product_name + '\'' +
+        ", product_type='" + product_type + '\'' +
+        '}';
+  }
 
-    public int getSmarthub_id() {
-        return smarthub_id;
-    }
+  public String getSmarthub_id() {
+    return smarthub_id;
+  }
 
-    public void setSmarthub_id(int smarthub_id) {
-        this.smarthub_id = smarthub_id;
-    }
+  public void setSmarthub_id(String smarthub_id) {
+    this.smarthub_id = smarthub_id;
+  }
 
-    public int getSensor_id() {
-        return sensor_id;
-    }
+  public int getValue() {
+    return value;
+  }
 
-    public void setSensor_id(int sensor_id) {
-        this.sensor_id = sensor_id;
-    }
+  public void setValue(int value) {
+    this.value = value;
+  }
 
-    public int getValue() {
-        return value;
-    }
+  public String getProduct_name() {
+    return product_name;
+  }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
+  public void setProduct_name(String product_name) {
+    this.product_name = product_name;
+  }
 
-    public String getProduct_name() {
-        return product_name;
-    }
+  public String getProduct_type() {
+    return product_type;
+  }
 
-    public void setProduct_name(String product_name) {
-        this.product_name = product_name;
-    }
+  public void setProduct_type(String product_type) {
+    this.product_type = product_type;
+  }
 }
