@@ -29,6 +29,7 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
   private int smartHubPosition;
   private User user;
   private Sensor[] sensors;
+  private String userId;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -36,15 +37,16 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
     getActionBar().setTitle("Inventory Data");
     getWidgetIds();
     applyActions();
-    user = new Gson().fromJson(getIntent().getStringExtra("user"), User.class);
-    Log.d("test2", "userID:" + user.getId());
+    if (getIntent().getStringExtra("user") != null)
+      user = new Gson().fromJson(getIntent().getStringExtra("user"), User.class);
+    userId = getIntent().getStringExtra("userID");
     inventoryLoading.setVisibility(View.VISIBLE);
-    callSmartHubWebservice(user);
+    callSmartHubWebservice(userId);
   }
 
-  private void callSmartHubWebservice(User user) {
+  private void callSmartHubWebservice(String user) {
     new WebserviceHelper(getApplicationContext(), this, "smarthub").execute("https://aesop.azure-mobile.net/tables/smarthub?" +
-        "$filter=(user_id+eq+'" + user.getId() + "')");
+        "$filter=(user_id+eq+'" + user + "')");
   }
 
   private void populateInventoryData(final Sensor[] sensors) {
@@ -122,7 +124,7 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
       inventoryLoading.setVisibility(View.VISIBLE);
       smartHubPosition = 0;
       rootLinearLayout.removeAllViewsInLayout();
-      callSmartHubWebservice(user);
+      callSmartHubWebservice(user.getId());
     }
     return super.onMenuItemSelected(featureId, item);
   }

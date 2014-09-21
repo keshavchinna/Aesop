@@ -56,6 +56,7 @@ public class LoginActivity extends Activity implements Callback {
       if (users.length > 0) {
         Intent intent = new Intent(this, DashboardActivity.class);
         intent.putExtra("user", new Gson().toJson(users[0]));
+        intent.putExtra("userID", users[0].getId());
         authentiCationProgressBar.setVisibility(View.GONE);
         startActivity(intent);
       } else {

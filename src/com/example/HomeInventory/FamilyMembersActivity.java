@@ -2,15 +2,14 @@ package com.example.HomeInventory;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.google.gson.Gson;
 
 /**
@@ -20,7 +19,7 @@ import com.google.gson.Gson;
  * Time: 5:18 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FamilyMembersActivity extends Activity implements Callback {
+public class FamilyMembersActivity extends Activity implements Callback, AdapterView.OnItemClickListener {
   String[] names = {"Karna", "Rama Krishna", "RK", "Prem"};
   int familyIndex = 0;
   private ListView familyMembersListView;
@@ -28,6 +27,7 @@ public class FamilyMembersActivity extends Activity implements Callback {
   private TextView name;
   private String[] familyMembersIdsList;
   private String[] familyMembersList;
+  private String[] userIds;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -35,11 +35,15 @@ public class FamilyMembersActivity extends Activity implements Callback {
     familyMembersListView = (ListView) findViewById(R.id.family_members_listView);
     getActionBar().setTitle("Family Members");
     familyMembersIdsList = getIntent().getStringArrayExtra("family_members");
+    familyMembersList = new String[familyMembersIdsList.length];
+    userIds = new String[familyMembersIdsList.length];
     if (familyMembersIdsList != null && familyMembersIdsList.length > 0) {
-      for (String family_members : familyMembersIdsList)
+      for (String family_members : familyMembersIdsList) {
+        Log.d("test3", "ids:" + family_members);
         new WebserviceHelper(this, FamilyMembersActivity.this, "user").execute(
             "https://aesop.azure-mobile.net/tables/user?" +
                 "$filter=(id+eq+'" + family_members + "')");
+      }
     } else {
       Toast toast = Toast.makeText(this, "No Family Members", Toast.LENGTH_SHORT);
       toast.setGravity(Gravity.CENTER, 0, 0);
@@ -49,9 +53,13 @@ public class FamilyMembersActivity extends Activity implements Callback {
 
   @Override
   public void userCallBack(String json) {
+    Log.d("test3", "json:" + json);
     if (json != null) {
       users = new Gson().fromJson(json, User[].class);
+      Log.d("test3", "user:" + users[0].toString());
+      Log.d("test3", "userLen:" + users.length);
       if (users.length > 0) {
+        userIds[familyIndex] = users[0].getId();
         familyMembersList[familyIndex++] = users[0].getName();
       }
       if (familyIndex == familyMembersIdsList.length)
@@ -61,6 +69,7 @@ public class FamilyMembersActivity extends Activity implements Callback {
 
   private void populateFamilyMembers(String[] familyMembersIdsList) {
     familyMembersListView.setAdapter(new FamilyMembersAdapter(getApplicationContext(), familyMembersList));
+    familyMembersListView.setOnItemClickListener(this);
   }
 
   @Override
@@ -73,6 +82,13 @@ public class FamilyMembersActivity extends Activity implements Callback {
 
   @Override
   public void sensorCallBack(String o) {
+  }
+
+  @Override
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+    intent.putExtra("userID", userIds[position]);
+    startActivity(intent);
   }
 
   private class FamilyMembersAdapter extends BaseAdapter {
