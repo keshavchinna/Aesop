@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.google.gson.Gson;
 
 /**
@@ -22,13 +20,27 @@ import com.google.gson.Gson;
 public class DashboardActivity extends Activity implements Callback, View.OnClickListener {
 
   ListView listView;
+  String[] smartHubs = {"Home", "Office"};
   private TextView showFamilyMembers;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.dashboard);
-    listView = (ListView) findViewById(R.id.list_smarthub);
-    showFamilyMembers = (TextView) findViewById(R.id.show_family_members);
+    setContentView(R.layout.main);
+    //listView = (ListView) findViewById(R.id.list_smarthub);
+    showFamilyMembers = (TextView) findViewById(R.id.show_family_members_list);
+    LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linear);
+    for (int j = 0; j < 2; j++) {
+      LinearLayout customLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_layout, null);
+      TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
+      smartHubName.setText(smartHubs[j]);
+      for (int i = 0; i < 2; i++) {
+        LinearLayout v = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom, null);
+        customLayout.addView(v);
+      }
+      linearLayout.addView(customLayout);
+      LinearLayout space = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.space, null);
+      linearLayout.addView(space);
+    }
     showFamilyMembers.setOnClickListener(this);
     getActionBar().setTitle("Inventory Data");
     User user = new Gson().fromJson(getIntent().getStringExtra("user"), User.class);
@@ -40,7 +52,7 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
   public void callback(String json) {
     if (json != null) {
       SmartHub[] smartHubs = new Gson().fromJson(json, SmartHub[].class);
-      listView.setAdapter(new SmartHubAdapter(smartHubs, this));
+      //listView.setAdapter(new SmartHubAdapter(smartHubs, this));
     } else {
       Toast.makeText(this, "Problem connection to server", Toast.LENGTH_SHORT).show();
     }
@@ -50,7 +62,7 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
   public void onClick(View v) {
     int id = v.getId();
     switch (id) {
-      case R.id.show_family_members:
+      case R.id.show_family_members_list:
         callFamilyMembersActivity();
         break;
     }
