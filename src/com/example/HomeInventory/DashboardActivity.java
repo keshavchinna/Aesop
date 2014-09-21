@@ -42,7 +42,7 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
   }
 
   private void callSmartHubWebservice(User user) {
-    new WebserviceHelper(this, "smarthub").execute("https://aesop.azure-mobile.net/tables/smarthub?" +
+    new WebserviceHelper(getApplicationContext(), this, "smarthub").execute("https://aesop.azure-mobile.net/tables/smarthub?" +
         "$filter=(user_id+eq+'" + user.getId() + "')");
   }
 
@@ -51,7 +51,8 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
 
     LinearLayout customLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_layout, null);
     TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
-    smartHubName.setText(smartHubs[smartHubPosition++].getLocation());
+    smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase() + " (" + smartHubs[smartHubPosition].getLocation().toUpperCase() + ")");
+    smartHubPosition++;
     for (int i = 0; i < inventories.length; i++) {
       RelativeLayout v = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.custom, null);
       itemName = (TextView) v.findViewById(R.id.item_name);
@@ -120,6 +121,8 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
 
   private void callFamilyMembersActivity() {
     Intent intent = new Intent(this, FamilyMembersActivity.class);
+    String[] familyMembers = user.getFamily_members().split(",");
+    intent.putExtra("family_members", familyMembers);
     startActivity(intent);
   }
 
@@ -135,7 +138,7 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
         smartHubs = new Gson().fromJson(json, SmartHub[].class);
         for (SmartHub smartHub : smartHubs) {
           Log.d("test2", "SmartHub size:" + smartHubs.length);
-          new WebserviceHelper(this, "inventory").execute("https://aesop.azure-mobile.net/tables/inventory?" +
+          new WebserviceHelper(getApplicationContext(), this, "sensor").execute("https://aesop.azure-mobile.net/tables/sensor?" +
               "$filter=(smarthub_id+eq+'" + smartHub.getId() + "')");
         }
       } else {
@@ -158,6 +161,28 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
     if (json != null) {
       // if (!json.isEmpty()) {
       inventories = new Gson().fromJson(json, Inventory[].class);
+
+     // populateInventoryData(inventories);
+      /*} else {
+        Toast toast = Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+      }*/
+    } else {
+      Toast toast = Toast.makeText(this, "Problem Connecting to Server", Toast.LENGTH_SHORT);
+      toast.setGravity(Gravity.CENTER, 0, 0);
+      toast.show();
+    }
+    inventoryLoading.setVisibility(View.GONE);
+  }
+
+  @Override
+  public void sensorCallBack(String json) {
+    Log.d("test2", "sensor: " + json.toString());
+    if (json != null) {
+      // if (!json.isEmpty()) {
+      inventories = new Gson().fromJson(json, Inventory[].class);
+
       populateInventoryData(inventories);
       /*} else {
         Toast toast = Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT);
@@ -170,6 +195,8 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
       toast.show();
     }
     inventoryLoading.setVisibility(View.GONE);
+    /*new WebserviceHelper(getApplicationContext(), this, "inventory").execute("https://aesop.azure-mobile.net/tables/inventory?" +
+        "$filter=(smarthub_id+eq+'" + smartHub.getId() + "')");*/
   }
 
  /* private class SmartHubAdapter extends BaseAdapter {

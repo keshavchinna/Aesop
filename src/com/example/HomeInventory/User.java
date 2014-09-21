@@ -20,6 +20,16 @@ public class User {
   private String name;
   @Expose
   private String pin;
+  @Expose
+  private String family_members;
+
+  public String getFamily_members() {
+    return family_members;
+  }
+
+  public void setFamily_members(String family_members) {
+    this.family_members = family_members;
+  }
 
   @Override
   public String toString() {

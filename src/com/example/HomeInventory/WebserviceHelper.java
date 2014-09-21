@@ -1,7 +1,10 @@
 package com.example.HomeInventory;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -18,9 +21,12 @@ import java.net.URL;
 public class WebserviceHelper extends AsyncTask {
 
   private final String tableName;
+  private final Context context;
   Callback callback;
+  private boolean netWorkConnected = true;
 
-  public WebserviceHelper(Callback callback, String tableName) {
+  public WebserviceHelper(Context context, Callback callback, String tableName) {
+    this.context = context;
     this.callback = callback;
     this.tableName = tableName;
   }
@@ -31,21 +37,27 @@ public class WebserviceHelper extends AsyncTask {
     Log.d("test2:", "Url: " + url);
     StringBuffer string = new StringBuffer();
     String line = null;
-    try {
-      HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
-      Log.d("test2:", "after open connection");
-      BufferedReader result = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-      Log.d("test2:", "result" + result);
-      while ((line = result.readLine()) != null) {
-        string.append(line);
+    if (Network.isConnected(context)) {
+      try {
+
+        HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
+        Log.d("test2:", "after open connection");
+        BufferedReader result = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+        Log.d("test2:", "result" + result);
+        while ((line = result.readLine()) != null) {
+          string.append(line);
+        }
+        line = new String(string);
+        Log.d("test2:", "line:" + line);
+      } catch (Exception e) {
+        Log.d("test2", "error:" + e.getMessage());
+        Log.d("test2", "error:" + e.getCause());
+        line = null;
+        e.printStackTrace();
       }
-      line = new String(string);
-      Log.d("test2:", "line:" + line);
-    } catch (Exception e) {
-      Log.d("test2", "error:" + e.getMessage());
-      Log.d("test2", "error:" + e.getCause());
-      line = null;
-      e.printStackTrace();
+
+    } else {
+      netWorkConnected = false;
     }
     return line;
   }
@@ -53,16 +65,22 @@ public class WebserviceHelper extends AsyncTask {
   @Override
   protected void onPostExecute(Object o) {
     super.onPostExecute(o);
-    switch (tableName) {
-      case "user":
-        callback.userCallBack((String) o);
-        break;
-      case "smarthub":
-        callback.smartHubCallBack((String) o);
-        break;
-      case "inventory":
-        callback.inventoryCallBack((String) o);
-        break;
+    if (netWorkConnected == false) {
+      Toast toast = Toast.makeText(context, "Please Check Network Connection", Toast.LENGTH_SHORT);
+      toast.setGravity(Gravity.CENTER, 0, 0);
+      toast.show();
+    } else {
+      switch (tableName) {
+        case "user":
+          callback.userCallBack((String) o);
+          break;
+        case "smarthub":
+          callback.smartHubCallBack((String) o);
+          break;
+        case "inventory":
+          callback.inventoryCallBack((String) o);
+          break;
+      }
     }
   }
 }

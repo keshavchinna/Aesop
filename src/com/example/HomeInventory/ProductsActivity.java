@@ -25,7 +25,7 @@ public class ProductsActivity extends Activity implements Callback {
     setContentView(R.layout.dashboard);
     listView = (ListView) findViewById(R.id.list_smarthub);
     SmartHub smartHub = new Gson().fromJson(getIntent().getStringExtra("smarthub"), SmartHub.class);
-    new WebserviceHelper(this, "product").execute("http://premapp.azure-mobile.net/tables/inventory?" +
+    new WebserviceHelper(this, this, "product").execute("http://premapp.azure-mobile.net/tables/inventory?" +
         "$filter=(smarthub_id+eq+" + smartHub.getId() + ")");
 
   }
@@ -43,17 +43,18 @@ public class ProductsActivity extends Activity implements Callback {
 */
   @Override
   public void userCallBack(String o) {
-    //To change body of implemented methods use File | Settings | File Templates.
   }
 
   @Override
   public void smartHubCallBack(String o) {
-    //To change body of implemented methods use File | Settings | File Templates.
   }
 
   @Override
   public void inventoryCallBack(String o) {
-    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void sensorCallBack(String o) {
   }
 
   private class SmartHubAdapter extends BaseAdapter {

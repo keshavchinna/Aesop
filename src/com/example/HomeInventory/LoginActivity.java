@@ -39,7 +39,7 @@ public class LoginActivity extends Activity implements Callback {
             inputKey.setError("Enter Four Digit PIN Number");
           } else {
             authentiCationProgressBar.setVisibility(View.VISIBLE);
-            new WebserviceHelper(LoginActivity.this, "user").execute(
+            new WebserviceHelper(getApplicationContext(), LoginActivity.this, "user").execute(
                 "https://aesop.azure-mobile.net/tables/user?" +
                     "$filter=(pin+eq+'" + input + "')");
           }
@@ -76,5 +76,9 @@ public class LoginActivity extends Activity implements Callback {
 
   @Override
   public void inventoryCallBack(String o) {
+  }
+
+  @Override
+  public void sensorCallBack(String o) {
   }
 }
