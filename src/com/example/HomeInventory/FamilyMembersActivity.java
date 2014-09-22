@@ -86,8 +86,9 @@ public class FamilyMembersActivity extends Activity implements Callback, Adapter
 
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+    Intent intent = new Intent(getApplicationContext(), ShowFamilyMemberData.class);
     intent.putExtra("userID", userIds[position]);
+    intent.putExtra("familyMemberName", familyMembersList[position]);
     startActivity(intent);
   }
 

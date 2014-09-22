@@ -20,9 +20,6 @@ import com.google.gson.Gson;
  * To change this template use File | Settings | File Templates.
  */
 public class UsageActivity extends Activity implements View.OnClickListener, Callback {
-  String[] usageDates = {"Present", "sep 19 2014", "sep 18 2014", "sep 17 2014", "sep 16 2014"};
-  String[] amountPercentage = {"20%", "36%", "48%", "65%", "85%"};
-  String[] usedPercentage = {"", "16%", "12%", "17%", "13%"};
   private ListView itemUsageListView;
   private Button orderButton;
   private Inventory[] inventories;
@@ -76,9 +73,6 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
         else {
           orderButton.setVisibility(View.GONE);
           noDataFound.setVisibility(View.VISIBLE);
-          /*Toast toast = Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT);
-          toast.setGravity(Gravity.CENTER, 0, 0);
-          toast.show();*/
         }
       } else {
         orderButton.setVisibility(View.GONE);
