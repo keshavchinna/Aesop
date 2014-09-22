@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/item_progress"
             android:max="100"
-            android:progress="50"
+            android:progress="0"
             android:layout_marginRight="8dp"
             android:layout_alignParentRight="true"
             android:padding="4dp"

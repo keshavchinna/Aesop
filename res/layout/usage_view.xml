@@ -20,6 +20,15 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 />
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Data Found"
+                android:id="@+id/no_data_found"
+                android:visibility="gone"
+                android:gravity="center"
+                android:layout_gravity="center"
+                />
     </LinearLayout>
     <LinearLayout
             android:orientation="vertical"

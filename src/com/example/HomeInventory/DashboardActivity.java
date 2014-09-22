@@ -69,8 +69,8 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
         }
       });
       itemName.setText(sensors[i].getProduct_name());
-      new WebserviceHelper(getApplicationContext(), itemProgressBar, "inventory").execute("https://aesop.azure-mobile.net/tables/inventory?" +
-          "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')");
+      new WebserviceHelper(getApplicationContext(), itemProgressBar, "inventory", sensors[0].getProduct_type()).execute("https://aesop.azure-mobile.net/tables/inventory?" +
+          "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')&__systemProperties=updatedAt&$orderby=__updatedAt%20desc");
 
       /*itemProgressBar.setProgress(inventories[0].getValue());
       if (inventories[0].getValue() < 20)

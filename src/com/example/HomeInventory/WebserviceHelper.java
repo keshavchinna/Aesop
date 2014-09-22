@@ -25,6 +25,7 @@ public class WebserviceHelper extends AsyncTask {
   private final String tableName;
   private final Context context;
   Callback callback;
+  private String productType;
   private ProgressBar progressBar;
   private boolean netWorkConnected = true;
 
@@ -34,10 +35,11 @@ public class WebserviceHelper extends AsyncTask {
     this.tableName = tableName;
   }
 
-  public WebserviceHelper(Context applicationContext, ProgressBar itemProgressBar, String tableName) {
+  public WebserviceHelper(Context applicationContext, ProgressBar itemProgressBar, String tableName, String productType) {
     this.context = applicationContext;
     this.tableName = tableName;
     progressBar = itemProgressBar;
+    this.productType = productType;
   }
 
   @Override
@@ -87,15 +89,20 @@ public class WebserviceHelper extends AsyncTask {
           callback.smartHubCallBack((String) o);
           break;
         case "inventory":
+
           if ((String) o != null) {
             if (!((String) o).isEmpty()) {
               Inventory[] inventories = new Gson().fromJson((String) o, Inventory[].class);
               if (inventories.length > 0) {
                 Log.d("test3", "sensorValue: " + inventories[0].getValue());
                 progressBar.setProgress(inventories[0].getValue());
-                if (inventories[0].getValue() < 20)
-                  progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.red_color));
-                //callback.inventoryCallBack((String) o);
+                if (productType.equalsIgnoreCase("unit")) {
+                  if (inventories[0].getValue() < 10)
+                    progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.red_color));
+                } else {
+                  if (inventories[0].getValue() < 20)
+                    progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.red_color));
+                }
               }
             }
           }

@@ -26,6 +26,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
   private ListView itemUsageListView;
   private Button orderButton;
   private Inventory[] inventories;
+  private TextView noDataFound;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -35,6 +36,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
         "$filter=(sensor_id+eq+'" + getIntent().getStringExtra("sensorId") + "')&__systemProperties=updatedAt&$orderby=__updatedAt%20desc");
     itemUsageListView = (ListView) findViewById(R.id.item_usage_list_view);
     orderButton = (Button) findViewById(R.id.order_button);
+    noDataFound = (TextView) findViewById(R.id.no_data_found);
     orderButton.setOnClickListener(this);
 
   }
@@ -65,20 +67,25 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
   @Override
   public void inventoryCallBack(String json) {
     Log.d("test2", "Inventory: " + json.toString());
-    if (json != null) {
+    if (json != null && !json.isEmpty()) {
       if (!json.isEmpty()) {
+        orderButton.setVisibility(View.VISIBLE);
         inventories = new Gson().fromJson(json, Inventory[].class);
-        itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
-
+        if (inventories.length > 0)
+          itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
+        else {
+          orderButton.setVisibility(View.GONE);
+          noDataFound.setVisibility(View.VISIBLE);
+          /*Toast toast = Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT);
+          toast.setGravity(Gravity.CENTER, 0, 0);
+          toast.show();*/
+        }
       } else {
+        orderButton.setVisibility(View.GONE);
         Toast toast = Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
       }
-    } else {
-      Toast toast = Toast.makeText(this, "Problem Connecting to Server", Toast.LENGTH_SHORT);
-      toast.setGravity(Gravity.CENTER, 0, 0);
-      toast.show();
     }
     //inventoryLoading.setVisibility(View.GONE);
   }
