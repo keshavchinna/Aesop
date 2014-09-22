@@ -24,18 +24,20 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
   private Button orderButton;
   private Inventory[] inventories;
   private TextView noDataFound;
+  private ProgressBar usageDataLoading;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.usage_view);
     getActionBar().setTitle(getIntent().getStringExtra("productName"));
-    new WebserviceHelper(getApplicationContext(), this, "productDetails").execute("https://aesop.azure-mobile.net/tables/inventory?" +
-        "$filter=(sensor_id+eq+'" + getIntent().getStringExtra("sensorId") + "')&__systemProperties=updatedAt&$orderby=__updatedAt%20desc");
     itemUsageListView = (ListView) findViewById(R.id.item_usage_list_view);
     orderButton = (Button) findViewById(R.id.order_button);
     noDataFound = (TextView) findViewById(R.id.no_data_found);
+    usageDataLoading = (ProgressBar) findViewById(R.id.usage_loading);
+    usageDataLoading.setVisibility(View.VISIBLE);
+    new WebserviceHelper(getApplicationContext(), this, "productDetails").execute("https://aesop.azure-mobile.net/tables/inventory?" +
+        "$filter=(sensor_id+eq+'" + getIntent().getStringExtra("sensorId") + "')&__systemProperties=updatedAt&$orderby=__updatedAt%20desc");
     orderButton.setOnClickListener(this);
-
   }
 
   @Override
@@ -67,14 +69,17 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
     if (json != null && !json.isEmpty()) {
       orderButton.setVisibility(View.VISIBLE);
       inventories = new Gson().fromJson(json, Inventory[].class);
-      if (inventories.length > 0)
+      if (inventories.length > 0) {
+        usageDataLoading.setVisibility(View.GONE);
         itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
-      else {
+      } else {
+        usageDataLoading.setVisibility(View.GONE);
         orderButton.setVisibility(View.GONE);
         noDataFound.setVisibility(View.VISIBLE);
       }
     } else {
       orderButton.setVisibility(View.GONE);
+      usageDataLoading.setVisibility(View.GONE);
       Toast toast = Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT);
       toast.setGravity(Gravity.CENTER, 0, 0);
       toast.show();
