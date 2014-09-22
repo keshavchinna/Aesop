@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/refresh"
-          android:icon="@drawable/refresh_icon"
-          android:title="Refresh"
-          android:showAsAction="always"/>
     <item android:id="@+id/family_group"
           android:icon="@drawable/user_group_icon"
           android:title="FamilyGroup"
+          android:showAsAction="always"/>
+    <item android:id="@+id/refresh"
+          android:icon="@drawable/refresh_icon"
+          android:title="Refresh"
           android:showAsAction="always"/>
 </menu>
