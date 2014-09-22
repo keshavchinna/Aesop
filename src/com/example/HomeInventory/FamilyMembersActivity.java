@@ -28,16 +28,19 @@ public class FamilyMembersActivity extends Activity implements Callback, Adapter
   private String[] familyMembersIdsList;
   private String[] familyMembersList;
   private String[] userIds;
+  private ProgressBar progressBar;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.family_members_layout);
     familyMembersListView = (ListView) findViewById(R.id.family_members_listView);
+    progressBar = (ProgressBar) findViewById(R.id.family_loading);
     getActionBar().setTitle("Family Members");
     familyMembersIdsList = getIntent().getStringArrayExtra("family_members");
     familyMembersList = new String[familyMembersIdsList.length];
     userIds = new String[familyMembersIdsList.length];
     if (familyMembersIdsList != null && familyMembersIdsList.length > 0) {
+      progressBar.setVisibility(View.VISIBLE);
       for (String family_members : familyMembersIdsList) {
         Log.d("test3", "ids:" + family_members);
         new WebserviceHelper(this, FamilyMembersActivity.this, "user").execute(
@@ -56,14 +59,21 @@ public class FamilyMembersActivity extends Activity implements Callback, Adapter
     Log.d("test3", "json:" + json);
     if (json != null) {
       users = new Gson().fromJson(json, User[].class);
-      Log.d("test3", "user:" + users[0].toString());
-      Log.d("test3", "userLen:" + users.length);
       if (users.length > 0) {
         userIds[familyIndex] = users[0].getId();
         familyMembersList[familyIndex++] = users[0].getName();
+      } else {
+        familyIndex++;
       }
-      if (familyIndex == familyMembersIdsList.length)
+      if (familyIndex == familyMembersIdsList.length) {
+        progressBar.setVisibility(View.GONE);
         populateFamilyMembers(familyMembersList);
+      }
+    } else {
+      progressBar.setVisibility(View.GONE);
+      Toast toast = Toast.makeText(this, "Problem Connecting to Server", Toast.LENGTH_SHORT);
+      toast.setGravity(Gravity.CENTER, 0, 0);
+      toast.show();
     }
   }
 

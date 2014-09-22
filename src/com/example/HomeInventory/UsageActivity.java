@@ -65,24 +65,22 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
   public void inventoryCallBack(String json) {
     Log.d("test2", "Inventory: " + json.toString());
     if (json != null && !json.isEmpty()) {
-      if (!json.isEmpty()) {
-        orderButton.setVisibility(View.VISIBLE);
-        inventories = new Gson().fromJson(json, Inventory[].class);
-        if (inventories.length > 0)
-          itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
-        else {
-          orderButton.setVisibility(View.GONE);
-          noDataFound.setVisibility(View.VISIBLE);
-        }
-      } else {
+      orderButton.setVisibility(View.VISIBLE);
+      inventories = new Gson().fromJson(json, Inventory[].class);
+      if (inventories.length > 0)
+        itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
+      else {
         orderButton.setVisibility(View.GONE);
-        Toast toast = Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        noDataFound.setVisibility(View.VISIBLE);
       }
+    } else {
+      orderButton.setVisibility(View.GONE);
+      Toast toast = Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT);
+      toast.setGravity(Gravity.CENTER, 0, 0);
+      toast.show();
     }
-    //inventoryLoading.setVisibility(View.GONE);
   }
+  //inventoryLoading.setVisibility(View.GONE);
 
   @Override
   public void sensorCallBack(String o) {
