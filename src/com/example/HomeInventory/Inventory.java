@@ -25,6 +25,17 @@ public class Inventory {
   @Expose
   private String product_type;
 
+  public String getInserted_at() {
+    return inserted_at;
+  }
+
+  public void setInserted_at(String inserted_at) {
+    this.inserted_at = inserted_at;
+  }
+
+  @Expose
+  private String inserted_at;
+
   public String get__updatedAt() {
     return __updatedAt;
   }

@@ -49,8 +49,6 @@ public class ShowFamilyMemberData extends Activity implements Callback {
   }
 
   private void populateInventoryData(final Sensor[] sensors) {
-//    for (int j = 0; j < smartHubs.length; j++) {
-
     LinearLayout customLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_layout, null);
     TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
     smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase() + " (" + smartHubs[smartHubPosition].getLocation().toUpperCase() + ")");
@@ -70,16 +68,11 @@ public class ShowFamilyMemberData extends Activity implements Callback {
       itemName.setText(sensors[i].getProduct_name());
       new WebserviceHelper(getApplicationContext(), itemProgressBar, "inventory", sensors[0].getProduct_type()).execute("https://aesop.azure-mobile.net/tables/inventory?" +
           "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')&__systemProperties=updatedAt&$orderby=__updatedAt%20desc");
-
-      /*itemProgressBar.setProgress(inventories[0].getValue());
-      if (inventories[0].getValue() < 20)
-        itemProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.red_color));*/
       customLayout.addView(v);
     }
     rootLinearLayout.addView(customLayout);
     LinearLayout space = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.space, null);
     rootLinearLayout.addView(space);
-//    }
   }
 
   private void getWidgetIds() {
@@ -168,10 +161,6 @@ public class ShowFamilyMemberData extends Activity implements Callback {
     if (o != null) {
       if (!o.isEmpty()) {
         sensors = new Gson().fromJson(o, Sensor[].class);
-       /* for (Sensor sensor : sensors) {
-          new WebserviceHelper(getApplicationContext(), this, "inventory").execute("https://aesop.azure-mobile.net/tables/inventory?" +
-              "$filter=(sensor_id+eq+'" + sensor.getId() + "')");
-        }*/
         populateInventoryData(sensors);
       } else {
         Toast toast = Toast.makeText(this, "Problem Connecting to Server", Toast.LENGTH_SHORT);

@@ -140,7 +140,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
       TextView date = (TextView) view.findViewById(R.id.date);
       TextView amountPercent = (TextView) view.findViewById(R.id.amount_percent);
       //date.setText(getPublishedAt(inventories[position].get__updatedAt()) + "");
-      date.setText(getDateTimeLocation(getPublishedAt(inventories[position].get__updatedAt())));
+      date.setText(getDateTimeLocation(getPublishedAt(inventories[position].getInserted_at())));
       amountPercent.setText("" + inventories[position].getValue());
       return view;
     }
