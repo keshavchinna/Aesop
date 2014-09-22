@@ -1,10 +1,10 @@
 package com.example.HomeInventory;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.Gravity;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.gson.Gson;
 
@@ -26,7 +26,7 @@ public class WebserviceHelper extends AsyncTask {
   private final Context context;
   Callback callback;
   private String productType;
-  private ProgressBar progressBar;
+  private TextProgressBar progressBar;
   private boolean netWorkConnected = true;
 
   public WebserviceHelper(Context context, Callback callback, String tableName) {
@@ -35,7 +35,7 @@ public class WebserviceHelper extends AsyncTask {
     this.tableName = tableName;
   }
 
-  public WebserviceHelper(Context applicationContext, ProgressBar itemProgressBar, String tableName, String productType) {
+  public WebserviceHelper(Context applicationContext, TextProgressBar itemProgressBar, String tableName, String productType) {
     this.context = applicationContext;
     this.tableName = tableName;
     progressBar = itemProgressBar;
@@ -95,7 +95,12 @@ public class WebserviceHelper extends AsyncTask {
               Inventory[] inventories = new Gson().fromJson((String) o, Inventory[].class);
               if (inventories.length > 0) {
                 Log.d("test3", "sensorValue: " + inventories[0].getValue());
+
                 progressBar.setProgress(inventories[0].getValue());
+                progressBar.setText(inventories[0].getValue() + "%");
+                progressBar.setTextColor(Color.WHITE);
+                /*if (inventories[0].getValue() == 0)
+                  progressBar.setText(inventories[0].getValue() + "%");*/
                 if (productType.equalsIgnoreCase("unit")) {
                   if (inventories[0].getValue() < 10)
                     progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.red_color));

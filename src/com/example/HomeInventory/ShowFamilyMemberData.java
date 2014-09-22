@@ -20,7 +20,7 @@ public class ShowFamilyMemberData extends Activity implements Callback {
   ListView listView;
   private TextView showFamilyMembers;
   private TextView itemName;
-  private ProgressBar itemProgressBar;
+  private TextProgressBar itemProgressBar;
   private SmartHub[] smartHubs;
   private Inventory[] inventories;
   private LinearLayout rootLinearLayout;
@@ -59,7 +59,7 @@ public class ShowFamilyMemberData extends Activity implements Callback {
       final int temp = i;
       RelativeLayout v = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.custom, null);
       itemName = (TextView) v.findViewById(R.id.item_name);
-      itemProgressBar = (ProgressBar) v.findViewById(R.id.item_progress);
+      itemProgressBar = (TextProgressBar) v.findViewById(R.id.item_progress);
       final int finalI = i;
       itemProgressBar.setOnClickListener(new View.OnClickListener() {
         @Override

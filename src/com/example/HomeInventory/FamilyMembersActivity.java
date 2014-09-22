@@ -5,10 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 import com.google.gson.Gson;
 
@@ -75,6 +72,14 @@ public class FamilyMembersActivity extends Activity implements Callback, Adapter
       toast.setGravity(Gravity.CENTER, 0, 0);
       toast.show();
     }
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = new MenuInflater(getBaseContext());
+    inflater.inflate(R.menu.dashboard_menu, menu);
+    menu.getItem(1).setVisible(false);
+    return true;
   }
 
   private void populateFamilyMembers(String[] familyMembersIdsList) {

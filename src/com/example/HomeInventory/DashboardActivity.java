@@ -20,7 +20,7 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
   ListView listView;
   private TextView showFamilyMembers;
   private TextView itemName;
-  private ProgressBar itemProgressBar;
+  private TextProgressBar itemProgressBar;
   private SmartHub[] smartHubs;
   private Inventory[] inventories;
   private LinearLayout rootLinearLayout;
@@ -60,7 +60,7 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
       final int temp = i;
       RelativeLayout v = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.custom, null);
       itemName = (TextView) v.findViewById(R.id.item_name);
-      itemProgressBar = (ProgressBar) v.findViewById(R.id.item_progress);
+      itemProgressBar = (TextProgressBar) v.findViewById(R.id.item_progress);
       final int finalI = i;
       itemProgressBar.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -70,7 +70,7 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
       });
       itemName.setText(sensors[i].getProduct_name());
       new WebserviceHelper(getApplicationContext(), itemProgressBar, "inventory", sensors[0].getProduct_type()).execute("https://aesop.azure-mobile.net/tables/inventory?" +
-          "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')&__systemProperties=updatedAt&$orderby=__updatedAt%20desc");
+          "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
 
       /*itemProgressBar.setProgress(inventories[0].getValue());
       if (inventories[0].getValue() < 20)
@@ -120,13 +120,26 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
 
   @Override
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    int id = item.getItemId();
+    switch (id) {
+      case R.id.refresh:
+        refreshData();
+        break;
+      case R.id.family_group:
+        callFamilyMembersActivity();
+        break;
+    }
     if (item.getItemId() == R.id.refresh) {
-      inventoryLoading.setVisibility(View.VISIBLE);
-      smartHubPosition = 0;
-      rootLinearLayout.removeAllViewsInLayout();
-      callSmartHubWebservice(user.getId());
+
     }
     return super.onMenuItemSelected(featureId, item);
+  }
+
+  private void refreshData() {
+    inventoryLoading.setVisibility(View.VISIBLE);
+    smartHubPosition = 0;
+    rootLinearLayout.removeAllViewsInLayout();
+    callSmartHubWebservice(user.getId());
   }
 
   private void callFamilyMembersActivity() {
