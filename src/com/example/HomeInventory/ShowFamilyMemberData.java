@@ -96,9 +96,10 @@ public class ShowFamilyMemberData extends Activity implements Callback {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    this.menu = menu;
     MenuInflater inflater = new MenuInflater(getBaseContext());
     inflater.inflate(R.menu.dashboard_menu, menu);
+    menu.getItem(0).setVisible(true);
+    menu.getItem(1).setVisible(false);
     return true;
   }
 

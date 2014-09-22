@@ -11,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.google.gson.Gson;
+import org.ocpsoft.prettytime.PrettyTime;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -113,17 +117,31 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
       return 0;
     }
 
+    public java.util.Date getPublishedAt(String str) {
+      java.util.Date timeStamp = new Date();
+      SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+      try {
+        str = str.replace("00:00", "0000");
+        timeStamp = format.parse(str);
+      } catch (Exception e) {
+      }
+      return timeStamp;
+    }
+
+    private String getDateTimeLocation(Date date) {
+      PrettyTime timeStamp = new PrettyTime();
+      return timeStamp.format(date);
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       View view = inflater.inflate(R.layout.usage_child_layout, null);
       TextView date = (TextView) view.findViewById(R.id.date);
       TextView amountPercent = (TextView) view.findViewById(R.id.amount_percent);
-      //TextView usedPercent = (TextView) view.findViewById(R.id.used_percent);
-      Log.d("test3", "updatedAt: " + inventories[position].get__updatedAt());
-      date.setText(inventories[position].get__updatedAt());
+      //date.setText(getPublishedAt(inventories[position].get__updatedAt()) + "");
+      date.setText(getDateTimeLocation(getPublishedAt(inventories[position].get__updatedAt())));
       amountPercent.setText("" + inventories[position].getValue());
-      //  usedPercent.setText("30%");
       return view;
     }
   }

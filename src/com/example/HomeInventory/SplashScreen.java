@@ -27,7 +27,7 @@ public class SplashScreen extends Activity {
   }
 
   private void callDashboard() {
-    Intent intent = new Intent(this, DashboardActivity.class);
+    Intent intent = new Intent(this, LoginActivity.class);
     startActivity(intent);
   }
 

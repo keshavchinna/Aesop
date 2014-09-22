@@ -79,6 +79,7 @@ public class FamilyMembersActivity extends Activity implements Callback, Adapter
     MenuInflater inflater = new MenuInflater(getBaseContext());
     inflater.inflate(R.menu.dashboard_menu, menu);
     menu.getItem(1).setVisible(false);
+    menu.getItem(0).setVisible(false);
     return true;
   }
 

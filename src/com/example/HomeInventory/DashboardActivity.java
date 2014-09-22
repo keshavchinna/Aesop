@@ -15,7 +15,7 @@ import com.google.gson.Gson;
  * Time: 7:02 PM
  * To change this template use File | Settings | File Templates.
  */
-public class DashboardActivity extends Activity implements Callback, View.OnClickListener {
+public class DashboardActivity extends Activity implements Callback {
 
   ListView listView;
   private TextView showFamilyMembers;
@@ -34,11 +34,10 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.inventory_dashboard);
-    getActionBar().setTitle("Inventory Data");
     getWidgetIds();
-    applyActions();
     if (getIntent().getStringExtra("user") != null)
       user = new Gson().fromJson(getIntent().getStringExtra("user"), User.class);
+    getActionBar().setTitle(user.getName());
     userId = getIntent().getStringExtra("userID");
     inventoryLoading.setVisibility(View.VISIBLE);
     callSmartHubWebservice(userId);
@@ -83,12 +82,8 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
 //    }
   }
 
-  private void applyActions() {
-    showFamilyMembers.setOnClickListener(this);
-  }
 
   private void getWidgetIds() {
-    showFamilyMembers = (TextView) findViewById(R.id.show_family_members_list);
     rootLinearLayout = (LinearLayout) findViewById(R.id.linear);
     inventoryLoading = (ProgressBar) findViewById(R.id.inventory_loading);
   }
@@ -98,16 +93,6 @@ public class DashboardActivity extends Activity implements Callback, View.OnClic
     intent.putExtra("productName", sensor.getProduct_name());
     intent.putExtra("sensorId", sensor.getId());
     startActivity(intent);
-  }
-
-  @Override
-  public void onClick(View v) {
-    int id = v.getId();
-    switch (id) {
-      case R.id.show_family_members_list:
-        callFamilyMembersActivity();
-        break;
-    }
   }
 
   @Override
