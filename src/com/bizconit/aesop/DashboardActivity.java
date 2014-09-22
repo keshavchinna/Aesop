@@ -1,4 +1,4 @@
-package com.example.HomeInventory;
+package com.bizconit.aesop;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import com.example.homeinventory.R;
+import com.example.homeinventory.Sensor;
 import com.google.gson.Gson;
 
 /**
@@ -67,7 +69,7 @@ public class DashboardActivity extends Activity implements Callback {
       });
       itemName.setText(sensors[i].getProduct_name());
       new WebserviceHelper(getApplicationContext(), itemProgressBar, "inventory", sensors[0].getProduct_type()).execute("https://aesop.azure-mobile.net/tables/inventory?" +
-          "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')&__systemProperties=updatedAt&$orderby=__updatedAt%20desc");
+          "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
       customLayout.addView(v);
     }
     rootLinearLayout.addView(customLayout);

@@ -1,4 +1,4 @@
-package com.example.HomeInventory;
+package com.bizconit.aesop;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

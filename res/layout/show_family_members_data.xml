@@ -5,10 +5,16 @@
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             >
+        <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/family_inventory_loading"
+                android:visibility="gone"
+                android:layout_gravity="center"/>
         <LinearLayout
                 android:orientation="vertical"
                 android:id="@+id/family_members_layout"
@@ -17,12 +23,6 @@
                 android:layout_height="wrap_content"
                 >
         </LinearLayout>
-        <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/family_inventory_loading"
-                android:visibility="gone"
-                android:layout_gravity="center"/>
     </LinearLayout>
 
 </ScrollView>

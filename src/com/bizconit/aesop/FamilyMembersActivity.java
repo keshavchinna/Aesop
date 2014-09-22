@@ -1,4 +1,4 @@
-package com.example.HomeInventory;
+package com.bizconit.aesop;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import com.example.homeinventory.R;
 import com.google.gson.Gson;
 
 /**

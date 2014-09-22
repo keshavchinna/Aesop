@@ -1,4 +1,4 @@
-package com.example.HomeInventory;
+package com.bizconit.aesop;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
+import com.example.homeinventory.R;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;

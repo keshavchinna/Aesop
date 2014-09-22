@@ -1,4 +1,4 @@
-package com.example.HomeInventory;
+package com.bizconit.aesop;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

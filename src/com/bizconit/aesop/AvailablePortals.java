@@ -1,4 +1,4 @@
-package com.example.HomeInventory;
+package com.bizconit.aesop;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.example.homeinventory.R;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,6 +29,7 @@ public class AvailablePortals extends Activity implements AdapterView.OnItemClic
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.portals_layout);
+    getActionBar().setTitle("Order");
     getWidgetIds();
     applyActions();
     availablePortalsListView.setAdapter(new PortalsAdapter(getApplicationContext()));

@@ -1,4 +1,4 @@
-package com.example.HomeInventory;
+package com.bizconit.aesop;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.example.homeinventory.R;
 import com.google.gson.Gson;
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -40,7 +41,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
     usageDataLoading = (ProgressBar) findViewById(R.id.usage_loading);
     usageDataLoading.setVisibility(View.VISIBLE);
     new WebserviceHelper(getApplicationContext(), this, "productDetails").execute("https://aesop.azure-mobile.net/tables/inventory?" +
-        "$filter=(sensor_id+eq+'" + getIntent().getStringExtra("sensorId") + "')&__systemProperties=updatedAt&$orderby=__updatedAt%20desc");
+        "$filter=(sensor_id+eq+'" + getIntent().getStringExtra("sensorId") + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
     orderButton.setOnClickListener(this);
   }
 
@@ -119,10 +120,12 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
 
     public java.util.Date getPublishedAt(String str) {
       java.util.Date timeStamp = new Date();
-      SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+      SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+     // format.setTimeZone(TimeZone.getTimeZone("IST"));
       try {
         str = str.replace("00:00", "0000");
         timeStamp = format.parse(str);
+
       } catch (Exception e) {
       }
       return timeStamp;
@@ -130,7 +133,8 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
 
     private String getDateTimeLocation(Date date) {
       PrettyTime timeStamp = new PrettyTime();
-      return timeStamp.format(date);
+      return timeStamp.format(new Date(System.currentTimeMillis()-(System.currentTimeMillis()-date.getTime())));
+
     }
 
     @Override
@@ -139,8 +143,9 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
       View view = inflater.inflate(R.layout.usage_child_layout, null);
       TextView date = (TextView) view.findViewById(R.id.date);
       TextView amountPercent = (TextView) view.findViewById(R.id.amount_percent);
-      //date.setText(getPublishedAt(inventories[position].get__updatedAt()) + "");
-      date.setText(getDateTimeLocation(getPublishedAt(inventories[position].getInserted_at())));
+//      date.setText(getPublishedAt(inventories[position].get__updatedAt()) + "");
+      Log.d("test4", "date:" + inventories[position].get__updatedAt());
+      date.setText(getDateTimeLocation(getPublishedAt(inventories[position].getInserted_at().replace("Z",""))));
       amountPercent.setText("" + inventories[position].getValue());
       return view;
     }

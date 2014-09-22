@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.HomeInventory"
+          package="com.example.homeinventory"
           android:versionCode="1"
           android:versionName="1.0">
     <uses-sdk android:minSdkVersion="19"/>
@@ -8,20 +8,21 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application android:label="@string/app_name" android:icon="@drawable/bizcon_icon"
                  android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
-        <activity android:name=".LoginActivity"
+        <activity android:name="com.bizconit.aesop.LoginActivity"
                   android:label="@string/app_name"
                   android:screenOrientation="portrait"
                   android:noHistory="true">
         </activity>
-        <activity android:name=".DashboardActivity" android:screenOrientation="portrait"/>
+        <activity android:name="com.bizconit.aesop.DashboardActivity" android:screenOrientation="portrait"/>
         <activity android:name=".ProductsActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".FamilyMembersActivity" android:screenOrientation="portrait">
+        <activity android:name="com.bizconit.aesop.FamilyMembersActivity" android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".UsageActivity" android:screenOrientation="portrait">
+        <activity android:name="com.bizconit.aesop.UsageActivity" android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".AvailablePortals" android:screenOrientation="portrait"/>
-        <activity android:name=".ShowFamilyMemberData" android:screenOrientation="portrait"/>
-        <activity android:name=".SplashScreen" android:noHistory="true">
+        <activity android:name="com.bizconit.aesop.AvailablePortals" android:screenOrientation="portrait"/>
+        <activity android:name="com.bizconit.aesop.ShowFamilyMemberData" android:screenOrientation="portrait"/>
+        <activity android:name="com.bizconit.aesop.SplashScreen" android:noHistory="true"
+                  android:theme="@android:style/Theme.Holo.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
