@@ -33,7 +33,7 @@ public class AvailablePortals extends Activity implements AdapterView.OnItemClic
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.portals_layout);
-    getActionBar().setTitle("Order-" + getIntent().getStringExtra("productName"));
+    getActionBar().setTitle("Order - " + getIntent().getStringExtra("productName"));
     getWidgetIds();
     applyActions();
     availablePortalsListView.setAdapter(new PortalsAdapter(getApplicationContext()));
