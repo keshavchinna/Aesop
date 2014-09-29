@@ -3,7 +3,7 @@
           package="com.example.homeinventory"
           android:versionCode="1"
           android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="19"/>
+    <uses-sdk android:minSdkVersion="11"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application android:label="@string/app_name" android:icon="@drawable/bizcon_icon"
@@ -14,7 +14,6 @@
                   android:noHistory="true">
         </activity>
         <activity android:name="com.bizconit.aesop.DashboardActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".ProductsActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.bizconit.aesop.FamilyMembersActivity" android:screenOrientation="portrait">
         </activity>
         <activity android:name="com.bizconit.aesop.UsageActivity" android:screenOrientation="portrait">
