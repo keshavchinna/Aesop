@@ -30,11 +30,13 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
   private Inventory[] inventories;
   private TextView noDataFound;
   private ProgressBar usageDataLoading;
+  private String productName;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.usage_view);
-    getActionBar().setTitle(getIntent().getStringExtra("productName"));
+    productName = getIntent().getStringExtra("productName");
+    getActionBar().setTitle(productName);
     itemUsageListView = (ListView) findViewById(R.id.item_usage_list_view);
     orderButton = (Button) findViewById(R.id.order_button);
     noDataFound = (TextView) findViewById(R.id.no_data_found);
@@ -57,6 +59,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
 
   private void callOrdersPortals() {
     Intent intent = new Intent(this, AvailablePortals.class);
+    intent.putExtra("productName", productName);
     startActivity(intent);
   }
 
@@ -121,7 +124,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
     public java.util.Date getPublishedAt(String str) {
       java.util.Date timeStamp = new Date();
       SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-     // format.setTimeZone(TimeZone.getTimeZone("IST"));
+      // format.setTimeZone(TimeZone.getTimeZone("IST"));
       try {
         str = str.replace("00:00", "0000");
         timeStamp = format.parse(str);
@@ -133,7 +136,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
 
     private String getDateTimeLocation(Date date) {
       PrettyTime timeStamp = new PrettyTime();
-      return timeStamp.format(new Date(System.currentTimeMillis()-(System.currentTimeMillis()-date.getTime())));
+      return timeStamp.format(new Date(System.currentTimeMillis() - (System.currentTimeMillis() - date.getTime())));
 
     }
 
@@ -145,7 +148,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
       TextView amountPercent = (TextView) view.findViewById(R.id.amount_percent);
 //      date.setText(getPublishedAt(inventories[position].get__updatedAt()) + "");
       Log.d("test4", "date:" + inventories[position].get__updatedAt());
-      date.setText(getDateTimeLocation(getPublishedAt(inventories[position].getInserted_at().replace("Z",""))));
+      date.setText(getDateTimeLocation(getPublishedAt(inventories[position].getInserted_at().replace("Z", ""))));
       amountPercent.setText("" + inventories[position].getValue());
       return view;
     }
