@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.example.homeinventory.R;
 
+import java.util.Random;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ehc
@@ -23,8 +25,10 @@ public class AvailablePortals extends Activity implements AdapterView.OnItemClic
   private String[] portalsNames = {"Amazon", "easyMandi", "Home Shop18"};
   private int[] portalImages = {R.drawable.amazon, R.drawable.easymandi_logo, R.drawable.home_shop};
   private String[] portalUrls = {"http://www.amazon.in/", "http://www.easymandi.com/", "http://www.homeshop18.com/"};
+  private float[] mrps = {10, 12, 9, 5, 7, 2, 4.5f, 3.95f};
   private TextView portalName;
   private ImageView portalImage;
+  private TextView productMrp;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -78,8 +82,10 @@ public class AvailablePortals extends Activity implements AdapterView.OnItemClic
       View view = inflater.inflate(R.layout.portals_child_layout, null);
       portalName = (TextView) view.findViewById(R.id.portal_name);
       portalImage = (ImageView) view.findViewById(R.id.portal_image);
+      productMrp = (TextView) view.findViewById(R.id.mrp);
       portalImage.setBackgroundResource(portalImages[position]);
       portalName.setText(portalsNames[position]);
+      productMrp.setText(mrps[new Random().nextInt(mrps.length)] + " $");
       return view;
     }
   }

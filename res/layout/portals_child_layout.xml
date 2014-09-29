@@ -25,4 +25,15 @@
             android:layout_toRightOf="@id/portal_image"
             android:id="@+id/portal_name"
             />
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="MRP"
+            android:id="@+id/mrp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="4dp"
+            />
+
+
 </RelativeLayout>
