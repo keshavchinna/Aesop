@@ -31,5 +31,6 @@
             android:layout_alignParentRight="true"
             android:padding="4dp"
             android:progressDrawable="@drawable/green_color"
+            android:rotation="180"
             android:layout_gravity="center_horizontal"/>
 </RelativeLayout>

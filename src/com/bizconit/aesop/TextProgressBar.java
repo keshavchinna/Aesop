@@ -14,20 +14,20 @@ public class TextProgressBar extends ProgressBar {
 
   public TextProgressBar(Context context) {
     super(context);
-    text = "0%";
-    textPaint = new Paint();
-    textPaint.setColor(Color.WHITE);
+    applyProperties();
   }
 
   public TextProgressBar(Context context, AttributeSet attrs) {
     super(context, attrs);
-    text = "0%";
-    textPaint = new Paint();
-    textPaint.setColor(Color.WHITE);
+    applyProperties();
   }
 
   public TextProgressBar(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
+    applyProperties();
+  }
+
+  private void applyProperties() {
     text = "0%";
     textPaint = new Paint();
     textPaint.setColor(Color.WHITE);
@@ -41,6 +41,7 @@ public class TextProgressBar extends ProgressBar {
     textPaint.getTextBounds(text, 0, text.length(), bounds);
     int x = getWidth() / 2 - bounds.centerX();
     int y = getHeight() / 2 - bounds.centerY();
+    canvas.scale(-1, -1f, getWidth() / 2, getHeight() / 2);
     canvas.drawText(text, x, y, textPaint);
   }
 
