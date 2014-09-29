@@ -18,14 +18,17 @@
         </activity>
         <activity android:name="com.bizconit.aesop.UsageActivity" android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.bizconit.aesop.AvailablePortals" android:screenOrientation="portrait"/>
-        <activity android:name="com.bizconit.aesop.ShowFamilyMemberData" android:screenOrientation="portrait"/>
-        <activity android:name="com.bizconit.aesop.SplashScreen" android:noHistory="true"
+        <activity android:name="com.bizconit.aesop.AvailablePortalsActivity" android:screenOrientation="portrait"/>
+        <activity android:name="com.bizconit.aesop.FamilyMemberDataActivity" android:screenOrientation="portrait"/>
+        <activity android:name="com.bizconit.aesop.SplashActivity" android:noHistory="true"
                   android:theme="@android:style/Theme.Holo.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name="com.bizconit.aesop.GraphActivity"
+                  android:screenOrientation="landscape">
         </activity>
     </application>
 </manifest>
