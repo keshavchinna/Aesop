@@ -16,7 +16,7 @@ import com.google.gson.Gson;
  * Time: 10:58 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ShowFamilyMemberData extends Activity implements Callback {
+public class FamilyMemberDataActivity extends Activity implements Callback {
 
   ListView listView;
   private TextView showFamilyMembers;

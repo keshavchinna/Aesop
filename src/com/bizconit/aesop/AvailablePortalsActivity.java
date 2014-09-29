@@ -20,7 +20,7 @@ import java.util.Random;
  * Time: 6:52 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AvailablePortals extends Activity implements AdapterView.OnItemClickListener {
+public class AvailablePortalsActivity extends Activity implements AdapterView.OnItemClickListener {
   private ListView availablePortalsListView;
   private String[] portalsNames = {"Amazon", "easyMandi", "Home Shop18"};
   private int[] portalImages = {R.drawable.amazon, R.drawable.easymandi_logo, R.drawable.home_shop};

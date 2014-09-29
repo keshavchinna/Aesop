@@ -16,7 +16,7 @@
                 android:id="@+id/item_usage_list_view"
                 android:dividerHeight="1dp"
                 android:scrollbars="none"
-                android:background="@android:color/holo_orange_light"
+                android:background="#e2d8b9"
                 android:layout_marginBottom="8dp"
                 />
         <TextView

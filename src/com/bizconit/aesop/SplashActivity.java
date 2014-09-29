@@ -13,7 +13,7 @@ import com.example.homeinventory.R;
  * Time: 3:06 PM
  * To change this template use File | Settings | File Templates.
  */
-public class SplashScreen extends Activity {
+public class SplashActivity extends Activity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.splash_screen);

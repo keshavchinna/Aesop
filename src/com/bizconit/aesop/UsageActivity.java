@@ -58,7 +58,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
   }
 
   private void callOrdersPortals() {
-    Intent intent = new Intent(this, AvailablePortals.class);
+    Intent intent = new Intent(this, AvailablePortalsActivity.class);
     intent.putExtra("productName", productName);
     startActivity(intent);
   }
