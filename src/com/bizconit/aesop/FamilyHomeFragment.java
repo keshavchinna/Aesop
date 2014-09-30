@@ -15,7 +15,7 @@ import com.google.gson.Gson;
  * Time: 10:30 AM
  * To change this template use File | Settings | File Templates.
  */
-public class SmartHubHomeFragment extends Fragment implements Callback {
+public class FamilyHomeFragment extends Fragment implements Callback {
   private TextView forgotPassword;
   private Button loginButton;
   private TextView showFamilyMembers;
@@ -38,8 +38,8 @@ public class SmartHubHomeFragment extends Fragment implements Callback {
     View view = inflater.inflate(R.layout.inventory_dashboard, null);
     getWidgetIds(view);
     setHasOptionsMenu(true);
-    userId = getActivity().getIntent().getStringExtra("userID");
-    userName = getActivity().getIntent().getStringExtra("userName");
+    userId =getActivity().getIntent().getStringExtra("userID");
+    userName =getActivity().getIntent().getStringExtra("familyMemberName");
     getActivity().getActionBar().setTitle(userName);
     inventoryLoading.setVisibility(View.VISIBLE);
     callSmartHubWebservice(userId);
@@ -74,6 +74,7 @@ public class SmartHubHomeFragment extends Fragment implements Callback {
     inventoryLoading = (ProgressBar) view.findViewById(R.id.inventory_loading);
     noSensorsFound = (TextView) view.findViewById(R.id.no_sensors_found);
   }
+
 
   @Override
   public void userCallBack(String o) {
@@ -180,5 +181,4 @@ public class SmartHubHomeFragment extends Fragment implements Callback {
     intent.putExtra("sensorId", sensor.getId());
     startActivity(intent);
   }
-
 }

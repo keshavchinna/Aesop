@@ -1,3 +1,135 @@
+
+
+package com.bizconit.aesop;
+
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: ehc
+ * Date: 30/9/14
+ * Time: 12:17 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public class FamilyMemberDataActivity extends FragmentActivity implements
+    ActionBar.TabListener {
+  private ViewPager viewPager;
+  private FamilyTabsPagerAdapter mAdapter;
+  private ActionBar actionBar;
+  private String[] tabs = {"Home", "Office"};
+  private TextView itemName;
+  private TextProgressBar itemProgressBar;
+  private SmartHub[] smartHubs;
+  private Inventory[] inventories;
+  private LinearLayout rootLinearLayout;
+  private ProgressBar inventoryLoading;
+  private Menu menu;
+  private int smartHubPosition;
+  private User user;
+  private Sensor[] sensors;
+  String userId;
+  private SharedPreferences smartHubPref;
+  private SharedPreferences.Editor editor;
+  private String userName;
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.show_family_members_data);
+    viewPager = (ViewPager) findViewById(R.id.pager1);
+    actionBar = getActionBar();
+    userName = getIntent().getStringExtra("familyMemberName");
+    getActionBar().setTitle(userName);
+    mAdapter = new FamilyTabsPagerAdapter(getSupportFragmentManager());
+    viewPager.setAdapter(mAdapter);
+    actionBar.setHomeButtonEnabled(false);
+    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+    for (String tab_name : tabs) {
+      actionBar.addTab(actionBar.newTab().setText(tab_name)
+          .setTabListener(this));
+    }
+
+    viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+      @Override
+      public void onPageSelected(int position) {
+        actionBar.setSelectedNavigationItem(position);
+      }
+
+      @Override
+      public void onPageScrolled(int arg0, float arg1, int arg2) {
+      }
+
+      @Override
+      public void onPageScrollStateChanged(int arg0) {
+      }
+    });
+  }
+
+
+  @Override
+  public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+  }
+
+  @Override
+  public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+    viewPager.setCurrentItem(tab.getPosition());
+  }
+
+  @Override
+  public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    this.menu = menu;
+    MenuInflater inflater = new MenuInflater(getBaseContext());
+    inflater.inflate(R.menu.dashboard_menu, menu);
+    menu.getItem(0).setVisible(false);
+    return true;
+  }
+
+  @Override
+  public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    int id = item.getItemId();
+    switch (id) {
+    /*  case R.id.refresh:
+        break;*/
+    }
+    return super.onMenuItemSelected(featureId, item);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 package com.bizconit.aesop;
 
 import android.app.Activity;
@@ -8,13 +140,15 @@ import android.view.*;
 import android.widget.*;
 import com.google.gson.Gson;
 
+*/
 /**
  * Created with IntelliJ IDEA.
  * User: ehc
  * Date: 22/9/14
  * Time: 10:58 AM
  * To change this template use File | Settings | File Templates.
- */
+ *//*
+
 public class FamilyMemberDataActivity extends Activity implements Callback {
 
   ListView listView;
@@ -172,3 +306,4 @@ public class FamilyMemberDataActivity extends Activity implements Callback {
     }
   }
 }
+*/

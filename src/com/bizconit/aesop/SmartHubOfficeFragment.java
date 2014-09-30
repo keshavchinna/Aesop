@@ -15,7 +15,7 @@ import com.google.gson.Gson;
  * Time: 10:30 AM
  * To change this template use File | Settings | File Templates.
  */
-public class SmartHubOfficeFragment extends Fragment implements View.OnClickListener, Callback {
+public class SmartHubOfficeFragment extends Fragment implements Callback {
   private TextView forgotPassword;
   private Button loginButton;
   private TextView showFamilyMembers;
@@ -35,11 +35,12 @@ public class SmartHubOfficeFragment extends Fragment implements View.OnClickList
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.inventory_dashboard, null);
     getWidgetIds(view);
+    setHasOptionsMenu(true);
     //   user = new Gson().fromJson(getActivity().getIntent().getStringExtra("user"), User.class);
     //getActivity().getActionBar().setTitle(user.getName());
     userId = getActivity().getIntent().getStringExtra("userID");
     inventoryLoading.setVisibility(View.VISIBLE);
-    callSmartHubWebservice("9AEA9EAD-AA1E-4932-A25B-DE20BBBA2E16");
+    callSmartHubWebservice(userId);
     return view;
   }
 
@@ -54,31 +55,42 @@ public class SmartHubOfficeFragment extends Fragment implements View.OnClickList
     inventoryLoading = (ProgressBar) view.findViewById(R.id.inventory_loading);
   }
 
-  @Override
-  public void onClick(View v) {
-    int id = v.getId();
-
+  public boolean onOptionsItemSelected(MenuItem item) {
+    Log.d("test4", "in fragment");
+    int id = item.getItemId();
+    switch (id) {
+      case R.id.refresh:
+        refreshData();
+        break;
+    }
+    return true;
   }
 
+  private void refreshData() {
+    inventoryLoading.setVisibility(View.VISIBLE);
+    smartHubPosition = 0;
+    rootLinearLayout.removeAllViewsInLayout();
+    callSmartHubWebservice(userId);
+  }
 
   @Override
   public void userCallBack(String o) {
-    //To change body of implemented methods use File | Settings | File Templates.
   }
 
   @Override
   public void smartHubCallBack(String json) {
     if (json != null) {
       if (!json.isEmpty()) {
-        Log.d("test2", "SmartHUbJson:" + json);
         smartHubs = new Gson().fromJson(json, SmartHub[].class);
+        int i = 0;
         for (SmartHub smartHub : smartHubs) {
-          Log.d("test2", "SmartHub size:" + smartHubs.length);
           if (smartHub.getLocation().equalsIgnoreCase("office")) {
+            smartHubPosition = i;
             new WebserviceHelper(getActivity().getApplicationContext(), this, "sensor").execute("https://aesop.azure-mobile.net/tables/sensor?" +
                 "$filter=(smarthub_id+eq+'" + smartHub.getId() + "')");
             break;
           }
+          i++;
         }
       } else {
         Toast toast = Toast.makeText(getActivity(), "No SmartHubs Found", Toast.LENGTH_SHORT);
@@ -96,7 +108,6 @@ public class SmartHubOfficeFragment extends Fragment implements View.OnClickList
 
   @Override
   public void inventoryCallBack(String json) {
-    Log.d("test2", "Inventory: " + json.toString());
     if (json != null) {
       if (!json.isEmpty()) {
         inventories = new Gson().fromJson(json, Inventory[].class);
@@ -115,7 +126,6 @@ public class SmartHubOfficeFragment extends Fragment implements View.OnClickList
 
   @Override
   public void sensorCallBack(String o) {
-    Log.d("test2", "sensor: " + o.toString());
     if (o != null) {
       if (!o.isEmpty()) {
         sensors = new Gson().fromJson(o, Sensor[].class);
@@ -132,7 +142,7 @@ public class SmartHubOfficeFragment extends Fragment implements View.OnClickList
   private void populateInventoryData(final Sensor[] sensors) {
     LinearLayout customLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom_layout, null);
     TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
-    smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase() + " (" + smartHubs[smartHubPosition].getLocation().toUpperCase() + ")");
+    smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase());
     smartHubPosition++;
     for (int i = 0; i < sensors.length; i++) {
       final int temp = i;

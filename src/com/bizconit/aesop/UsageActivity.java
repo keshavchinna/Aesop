@@ -148,7 +148,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
 //      date.setText(getPublishedAt(inventories[position].get__updatedAt()) + "");
       Log.d("test4", "date:" + inventories[position].get__updatedAt());
       date.setText(getDateTimeLocation(getPublishedAt(inventories[position].getInserted_at().replace("Z", ""))));
-      amountPercent.setText("" + inventories[position].getValue());
+      amountPercent.setText("" + inventories[position].getValue() + "%");
       return view;
     }
   }

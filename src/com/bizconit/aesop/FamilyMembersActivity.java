@@ -26,17 +26,20 @@ public class FamilyMembersActivity extends Activity implements Callback, Adapter
   private String[] familyMembersList;
   private String[] userIds;
   private ProgressBar progressBar;
+  private TextView noFamilyMembers;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.family_members_layout);
     familyMembersListView = (ListView) findViewById(R.id.family_members_listView);
+    noFamilyMembers = (TextView) findViewById(R.id.no_family_members);
     progressBar = (ProgressBar) findViewById(R.id.family_loading);
     getActionBar().setTitle("Family Members");
     familyMembersIdsList = getIntent().getStringArrayExtra("family_members");
     familyMembersList = new String[familyMembersIdsList.length];
     userIds = new String[familyMembersIdsList.length];
     if (familyMembersIdsList != null && familyMembersIdsList.length > 0) {
+      noFamilyMembers.setVisibility(View.GONE);
       progressBar.setVisibility(View.VISIBLE);
       for (String family_members : familyMembersIdsList) {
         Log.d("test3", "ids:" + family_members);
@@ -45,9 +48,10 @@ public class FamilyMembersActivity extends Activity implements Callback, Adapter
                 "$filter=(id+eq+'" + family_members + "')");
       }
     } else {
-      Toast toast = Toast.makeText(this, "No Family Members", Toast.LENGTH_SHORT);
+      /*Toast toast = Toast.makeText(this, "No Family Members", Toast.LENGTH_SHORT);
       toast.setGravity(Gravity.CENTER, 0, 0);
-      toast.show();
+      toast.show();*/
+      noFamilyMembers.setVisibility(View.VISIBLE);
     }
   }
 
@@ -104,6 +108,7 @@ public class FamilyMembersActivity extends Activity implements Callback, Adapter
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Intent intent = new Intent(getApplicationContext(), FamilyMemberDataActivity.class);
     intent.putExtra("userID", userIds[position]);
+    Log.d("test7", "userid:" + userIds[position]);
     intent.putExtra("familyMemberName", familyMembersList[position]);
     startActivity(intent);
   }

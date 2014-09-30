@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.google.gson.Gson;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,8 +48,7 @@ public class DashBoard extends FragmentActivity implements
     setContentView(R.layout.dash_board);
     viewPager = (ViewPager) findViewById(R.id.pager);
     actionBar = getActionBar();
-    smartHubPref = getSharedPreferences("smarthub", MODE_MULTI_PROCESS);
-    editor = smartHubPref.edit();
+    user = new Gson().fromJson(getIntent().getStringExtra("user"), User.class);
     mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
     viewPager.setAdapter(mAdapter);
     actionBar.setHomeButtonEnabled(false);
@@ -73,7 +73,6 @@ public class DashBoard extends FragmentActivity implements
       public void onPageScrollStateChanged(int arg0) {
       }
     });
-    //callSmartHubWebservice("4264");
   }
 
 
@@ -115,16 +114,14 @@ public class DashBoard extends FragmentActivity implements
     return super.onMenuItemSelected(featureId, item);
   }
 
- /* private void refreshData() {
-    inventoryLoading.setVisibility(View.VISIBLE);
-    smartHubPosition = 0;
-    rootLinearLayout.removeAllViewsInLayout();
-    callSmartHubWebservice(user.getId());
-  }*/
 
   private void callFamilyMembersActivity() {
     Intent intent = new Intent(this, FamilyMembersActivity.class);
-    String[] familyMembers = "281962AC-D36C-41ED-B5B5-E547A2687807,3E8EC0CF-B1DD-461F-941E-8B49D5AE5C7A".split(",");
+    String[] familyMembers = null;
+    if (user.getFamily_members() != null) {
+      familyMembers = user.getFamily_members().split(",");
+    } else
+      familyMembers = new String[0];
     intent.putExtra("family_members", familyMembers);
     startActivity(intent);
   }

@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:text="MRP"
+            android:textColor="@android:color/black"
             android:id="@+id/mrp"
             android:layout_alignParentRight="true"
             android:layout_margin="4dp"
