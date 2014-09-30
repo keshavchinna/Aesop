@@ -30,6 +30,7 @@ public class SmartHubHomeFragment extends Fragment implements View.OnClickListen
   private User user;
   private Sensor[] sensors;
   private String userId;
+  private TextView noSensorsFound;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,6 +77,7 @@ public class SmartHubHomeFragment extends Fragment implements View.OnClickListen
   private void getWidgetIds(View view) {
     rootLinearLayout = (LinearLayout) view.findViewById(R.id.linear);
     inventoryLoading = (ProgressBar) view.findViewById(R.id.inventory_loading);
+    noSensorsFound = (TextView) view.findViewById(R.id.no_sensors_found);
   }
 
   @Override
@@ -154,30 +156,36 @@ public class SmartHubHomeFragment extends Fragment implements View.OnClickListen
   }
 
   private void populateInventoryData(final Sensor[] sensors) {
-    LinearLayout customLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom_layout, null);
-    TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
-    smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase() + " (" + smartHubs[smartHubPosition].getLocation().toUpperCase() + ")");
-    smartHubPosition++;
-    for (int i = 0; i < sensors.length; i++) {
-      final int temp = i;
-      RelativeLayout v = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom, null);
-      itemName = (TextView) v.findViewById(R.id.item_name);
-      itemProgressBar = (TextProgressBar) v.findViewById(R.id.item_progress);
-      final int finalI = i;
-      itemProgressBar.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          callItemDetails(sensors[temp]);
-        }
-      });
-      itemName.setText(sensors[i].getProduct_name());
-      new WebserviceHelper(getActivity().getApplicationContext(), itemProgressBar, "inventory", sensors[0].getProduct_type()).execute("https://aesop.azure-mobile.net/tables/inventory?" +
-          "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
-      customLayout.addView(v);
+    Log.d("test1", "sensorsLength: " + sensors.length);
+    if (sensors.length > 0) {
+      noSensorsFound.setVisibility(View.GONE);
+      LinearLayout customLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom_layout, null);
+      TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
+      smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase() + " (" + smartHubs[smartHubPosition].getLocation().toUpperCase() + ")");
+      smartHubPosition++;
+      for (int i = 0; i < sensors.length; i++) {
+        final int temp = i;
+        RelativeLayout v = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom, null);
+        itemName = (TextView) v.findViewById(R.id.item_name);
+        itemProgressBar = (TextProgressBar) v.findViewById(R.id.item_progress);
+        final int finalI = i;
+        itemProgressBar.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            callItemDetails(sensors[temp]);
+          }
+        });
+        itemName.setText(sensors[i].getProduct_name());
+        new WebserviceHelper(getActivity().getApplicationContext(), itemProgressBar, "inventory", sensors[0].getProduct_type()).execute("https://aesop.azure-mobile.net/tables/inventory?" +
+            "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
+        customLayout.addView(v);
+      }
+      rootLinearLayout.addView(customLayout);
+      LinearLayout space = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.space, null);
+      rootLinearLayout.addView(space);
+    } else {
+      noSensorsFound.setVisibility(View.VISIBLE);
     }
-    rootLinearLayout.addView(customLayout);
-    LinearLayout space = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.space, null);
-    rootLinearLayout.addView(space);
   }
 
   private void callItemDetails(Sensor sensor) {
