@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import com.example.homeinventory.R;
 import com.google.gson.Gson;
 
 /**

@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import com.example.homeinventory.R;
 import com.google.gson.Gson;
 
 /**
@@ -16,7 +15,7 @@ import com.google.gson.Gson;
  * Time: 10:30 AM
  * To change this template use File | Settings | File Templates.
  */
-public class SmartHubOfficeFragment extends Fragment implements View.OnClickListener , Callback{
+public class SmartHubOfficeFragment extends Fragment implements View.OnClickListener, Callback {
   private TextView forgotPassword;
   private Button loginButton;
   private TextView showFamilyMembers;
@@ -31,6 +30,7 @@ public class SmartHubOfficeFragment extends Fragment implements View.OnClickList
   private User user;
   private Sensor[] sensors;
   private String userId;
+
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.inventory_dashboard, null);
@@ -42,6 +42,7 @@ public class SmartHubOfficeFragment extends Fragment implements View.OnClickList
     callSmartHubWebservice("9AEA9EAD-AA1E-4932-A25B-DE20BBBA2E16");
     return view;
   }
+
   private void callSmartHubWebservice(String userId) {
     new WebserviceHelper(getActivity().getApplicationContext(), this, "smarthub").execute("https://aesop.azure-mobile.net/tables/smarthub?" +
         "$filter=(user_id+eq+'" + userId + "')");
@@ -49,7 +50,7 @@ public class SmartHubOfficeFragment extends Fragment implements View.OnClickList
 
 
   private void getWidgetIds(View view) {
-    rootLinearLayout = (LinearLayout)view. findViewById(R.id.linear);
+    rootLinearLayout = (LinearLayout) view.findViewById(R.id.linear);
     inventoryLoading = (ProgressBar) view.findViewById(R.id.inventory_loading);
   }
 
@@ -73,7 +74,7 @@ public class SmartHubOfficeFragment extends Fragment implements View.OnClickList
         smartHubs = new Gson().fromJson(json, SmartHub[].class);
         for (SmartHub smartHub : smartHubs) {
           Log.d("test2", "SmartHub size:" + smartHubs.length);
-          if(smartHub.getLocation().equalsIgnoreCase("office")){
+          if (smartHub.getLocation().equalsIgnoreCase("office")) {
             new WebserviceHelper(getActivity().getApplicationContext(), this, "sensor").execute("https://aesop.azure-mobile.net/tables/sensor?" +
                 "$filter=(smarthub_id+eq+'" + smartHub.getId() + "')");
             break;
@@ -127,6 +128,7 @@ public class SmartHubOfficeFragment extends Fragment implements View.OnClickList
       inventoryLoading.setVisibility(View.GONE);
     }
   }
+
   private void populateInventoryData(final Sensor[] sensors) {
     LinearLayout customLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom_layout, null);
     TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
@@ -153,6 +155,7 @@ public class SmartHubOfficeFragment extends Fragment implements View.OnClickList
     LinearLayout space = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.space, null);
     rootLinearLayout.addView(space);
   }
+
   private void callItemDetails(Sensor sensor) {
     Intent intent = new Intent(getActivity(), UsageActivity.class);
     intent.putExtra("productName", sensor.getProduct_name());

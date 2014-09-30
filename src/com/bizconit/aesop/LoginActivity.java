@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.homeinventory.R;
 import com.google.gson.Gson;
 
 public class LoginActivity extends Activity implements Callback {

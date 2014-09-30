@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.example.homeinventory.R;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,7 +21,7 @@ import com.example.homeinventory.R;
  * Time: 12:17 PM
  * To change this template use File | Settings | File Templates.
  */
-public class DashBoard  extends FragmentActivity implements
+public class DashBoard extends FragmentActivity implements
     ActionBar.TabListener {
   private ViewPager viewPager;
   private TabsPagerAdapter mAdapter;
@@ -48,8 +47,8 @@ public class DashBoard  extends FragmentActivity implements
     setContentView(R.layout.dash_board);
     viewPager = (ViewPager) findViewById(R.id.pager);
     actionBar = getActionBar();
-    smartHubPref=getSharedPreferences("smarthub",MODE_MULTI_PROCESS);
-     editor=smartHubPref.edit();
+    smartHubPref = getSharedPreferences("smarthub", MODE_MULTI_PROCESS);
+    editor = smartHubPref.edit();
     mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
     viewPager.setAdapter(mAdapter);
     actionBar.setHomeButtonEnabled(false);
@@ -125,7 +124,7 @@ public class DashBoard  extends FragmentActivity implements
 
   private void callFamilyMembersActivity() {
     Intent intent = new Intent(this, FamilyMembersActivity.class);
-    String[] familyMembers ="281962AC-D36C-41ED-B5B5-E547A2687807,3E8EC0CF-B1DD-461F-941E-8B49D5AE5C7A".split(",");
+    String[] familyMembers = "281962AC-D36C-41ED-B5B5-E547A2687807,3E8EC0CF-B1DD-461F-941E-8B49D5AE5C7A".split(",");
     intent.putExtra("family_members", familyMembers);
     startActivity(intent);
   }
