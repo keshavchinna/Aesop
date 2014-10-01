@@ -30,6 +30,9 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
   private TextView noDataFound;
   private ProgressBar usageDataLoading;
   private String productName;
+  private Button graphButton;
+  private int[] values = new int[4];
+  private String[] dates = new String[4];
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -38,12 +41,14 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
     getActionBar().setTitle(productName);
     itemUsageListView = (ListView) findViewById(R.id.item_usage_list_view);
     orderButton = (Button) findViewById(R.id.order_button);
+    graphButton = (Button) findViewById(R.id.view_graph);
     noDataFound = (TextView) findViewById(R.id.no_data_found);
     usageDataLoading = (ProgressBar) findViewById(R.id.usage_loading);
     usageDataLoading.setVisibility(View.VISIBLE);
     new WebserviceHelper(getApplicationContext(), this, "productDetails").execute("https://aesop.azure-mobile.net/tables/inventory?" +
         "$filter=(sensor_id+eq+'" + getIntent().getStringExtra("sensorId") + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
     orderButton.setOnClickListener(this);
+    graphButton.setOnClickListener(this);
   }
 
   @Override
@@ -53,7 +58,18 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
       case R.id.order_button:
         callOrdersPortals();
         break;
+      case R.id.view_graph:
+        callGraphActivity();
+        break;
     }
+  }
+
+  private void callGraphActivity() {
+    Intent intent = new Intent(this, GraphActivity.class);
+    intent.putExtra("productName", productName);
+    intent.putExtra("values", values);
+    intent.putExtra("dates", dates);
+    startActivity(intent);
   }
 
   private void callOrdersPortals() {
@@ -78,6 +94,13 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
       inventories = new Gson().fromJson(json, Inventory[].class);
       if (inventories.length > 0) {
         usageDataLoading.setVisibility(View.GONE);
+        int i = 0;
+        for (Inventory inventory : inventories) {
+          values[i] = inventory.getValue();
+          dates[i++] = getDateInString(getPublishedAt(inventory.getInserted_at().replace("Z", "")));
+          if (i == 4)
+            break;
+        }
         itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
       } else {
         usageDataLoading.setVisibility(View.GONE);
@@ -96,6 +119,30 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
 
   @Override
   public void sensorCallBack(String o) {
+  }
+
+  public String getDateInString(java.util.Date date) {
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
+    String timeStamp = "";
+    try {
+      timeStamp = format.format(date);
+
+    } catch (Exception e) {
+    }
+    return timeStamp;
+  }
+
+  public java.util.Date getPublishedAt(String str) {
+    java.util.Date timeStamp = new Date();
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    // format.setTimeZone(TimeZone.getTimeZone("IST"));
+    try {
+      str = str.replace("00:00", "0000");
+      timeStamp = format.parse(str);
+
+    } catch (Exception e) {
+    }
+    return timeStamp;
   }
 
   private class ItemUsageListAdapter extends BaseAdapter {
@@ -120,19 +167,6 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
       return 0;
     }
 
-    public java.util.Date getPublishedAt(String str) {
-      java.util.Date timeStamp = new Date();
-      SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-      // format.setTimeZone(TimeZone.getTimeZone("IST"));
-      try {
-        str = str.replace("00:00", "0000");
-        timeStamp = format.parse(str);
-
-      } catch (Exception e) {
-      }
-      return timeStamp;
-    }
-
     private String getDateTimeLocation(Date date) {
       PrettyTime timeStamp = new PrettyTime();
       return timeStamp.format(new Date(System.currentTimeMillis() - (System.currentTimeMillis() - date.getTime())));
@@ -147,7 +181,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
       TextView amountPercent = (TextView) view.findViewById(R.id.amount_percent);
 //      date.setText(getPublishedAt(inventories[position].get__updatedAt()) + "");
       Log.d("test4", "date:" + inventories[position].get__updatedAt());
-      date.setText(getDateTimeLocation(getPublishedAt(inventories[position].getInserted_at().replace("Z", ""))));
+      date.setText(getDateInString(getPublishedAt(inventories[position].getInserted_at().replace("Z", ""))));
       amountPercent.setText("" + inventories[position].getValue() + "%");
       return view;
     }
