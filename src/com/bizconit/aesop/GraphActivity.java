@@ -53,8 +53,8 @@ public class GraphActivity extends Activity {
     graphView.setHorizontalLabels(dates);
     graphView.setDrawDataPoints(true);
     graphView.setScalable(true);
-    graphView.setShowLegend(true);
-    graphView.setLegendAlign(GraphView.LegendAlign.TOP);
+   /* graphView.setShowLegend(true);
+    graphView.setLegendAlign(GraphView.LegendAlign.TOP);*/
     graphView.setScrollable(true);
     graphView.getGraphViewStyle().setVerticalLabelsAlign(Paint.Align.LEFT);
     graphView.setDataPointsRadius(5.0f);
