@@ -31,8 +31,8 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
   private ProgressBar usageDataLoading;
   private String productName;
   private Button graphButton;
-  private int[] values = new int[4];
-  private String[] dates = new String[4];
+  private int[] values;
+  private String[] dates;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -95,11 +95,14 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
       if (inventories.length > 0) {
         usageDataLoading.setVisibility(View.GONE);
         int i = 0;
+        int size = inventories.length;
+        values = new int[size];
+        dates = new String[size];
         for (Inventory inventory : inventories) {
           values[i] = inventory.getValue();
           dates[i++] = getDateInString(getPublishedAt(inventory.getInserted_at().replace("Z", "")));
-          if (i == 4)
-            break;
+          /*if (i == 4)
+            break;*/
         }
         itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
       } else {

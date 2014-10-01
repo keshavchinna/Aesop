@@ -61,9 +61,11 @@ public class LoginActivity extends Activity implements Callback {
         authentiCationProgressBar.setVisibility(View.GONE);
         startActivity(intent);
       } else {
-        Toast toast = Toast.makeText(this, "Please Check Your PIN Number", Toast.LENGTH_SHORT);
+        /*Toast toast = Toast.makeText(this, "Please Check Your PIN Number", Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        toast.show();*/
+        inputKey.setError("Invalid PIN Number");
+        inputKey.setText("");
         authentiCationProgressBar.setVisibility(View.GONE);
       }
     } else {

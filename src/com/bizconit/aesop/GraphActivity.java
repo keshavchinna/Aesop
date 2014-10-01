@@ -3,6 +3,7 @@ package com.bizconit.aesop;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -35,23 +36,32 @@ public class GraphActivity extends Activity {
     productName = getIntent().getStringExtra("productName");
     getActionBar().setTitle(productName);
     LinearLayout rootView = (LinearLayout) findViewById(R.id.root);
-    GraphViewSeries exampleSeries = new GraphViewSeries(new GraphView.GraphViewData[]{
+    graphData = new GraphView.GraphViewData[values.length];
+    for (int i = 0; i < values.length; i++) {
+      graphData[i] = new GraphView.GraphViewData(i + 1, values[i]);
+    }
+   /* GraphViewSeries exampleSeries = new GraphViewSeries(new GraphView.GraphViewData[]{
         new GraphView.GraphViewData(1, values[0])
         , new GraphView.GraphViewData(2, values[1])
         , new GraphView.GraphViewData(3, values[2])
         , new GraphView.GraphViewData(4, values[3])
-    });
-
+    });*/
+    GraphViewSeries exampleSeries = new GraphViewSeries(productName, new GraphViewSeries.GraphViewSeriesStyle(Color.rgb(200, 50, 00), 3), graphData);
     LineGraphView graphView = new LineGraphView(this, productName + " Inventory");
     graphView.addSeries(exampleSeries);
     graphView.setManualYAxisBounds(100, 0);
     graphView.setHorizontalLabels(dates);
     graphView.setDrawDataPoints(true);
+    graphView.setScalable(true);
+    graphView.setShowLegend(true);
+    graphView.setLegendAlign(GraphView.LegendAlign.TOP);
+    graphView.setScrollable(true);
+    graphView.getGraphViewStyle().setVerticalLabelsAlign(Paint.Align.LEFT);
     graphView.setDataPointsRadius(5.0f);
     graphView.setDrawBackground(true);
     graphView.getGraphViewStyle().setTextSize(14);
     graphView.getGraphViewStyle().getGridStyle().drawHorizontal();
-    graphView.getGraphViewStyle().setNumHorizontalLabels(4);
+    graphView.getGraphViewStyle().setNumHorizontalLabels(dates.length);
     graphView.getGraphViewStyle().setNumVerticalLabels(11);
     rootView.addView(graphView);
   }

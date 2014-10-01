@@ -65,6 +65,7 @@ public class SmartHubHomeFragment extends Fragment implements Callback {
   private void refreshData() {
     inventoryLoading.setVisibility(View.VISIBLE);
     smartHubPosition = 0;
+    noSensorsFound.setVisibility(View.GONE);
     rootLinearLayout.removeAllViewsInLayout();
     callSmartHubWebservice(userId);
   }
@@ -166,6 +167,7 @@ public class SmartHubHomeFragment extends Fragment implements Callback {
     if (sensors.length == 0) {
       noSensorsFound.setVisibility(View.VISIBLE);
       rootLinearLayout.addView(customLayout, 0);
+
     } else {
       noSensorsFound.setVisibility(View.GONE);
       rootLinearLayout.addView(customLayout);
