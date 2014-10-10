@@ -1,8 +1,10 @@
 package com.bizconit.aesop;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -15,7 +17,7 @@ import com.google.gson.Gson;
  * Time: 10:30 AM
  * To change this template use File | Settings | File Templates.
  */
-public class SmartHubHomeFragment extends Fragment implements Callback {
+public class SmartHubHomeFragment extends Fragment implements Callback, AdapterView.OnItemClickListener {
   private TextView forgotPassword;
   private Button loginButton;
   private TextView showFamilyMembers;
@@ -32,6 +34,7 @@ public class SmartHubHomeFragment extends Fragment implements Callback {
   private String userId;
   private TextView noSensorsFound;
   private String userName;
+  private ListView sensorsDataListView;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,7 +74,7 @@ public class SmartHubHomeFragment extends Fragment implements Callback {
   }
 
   private void getWidgetIds(View view) {
-    rootLinearLayout = (LinearLayout) view.findViewById(R.id.linear);
+    sensorsDataListView = (ListView) view.findViewById(R.id.sensors_data_list_view);
     inventoryLoading = (ProgressBar) view.findViewById(R.id.inventory_loading);
     noSensorsFound = (TextView) view.findViewById(R.id.no_sensors_found);
   }
@@ -143,44 +146,67 @@ public class SmartHubHomeFragment extends Fragment implements Callback {
   }
 
   private void populateInventoryData(final Sensor[] sensors) {
-    LinearLayout customLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom_layout, null);
-    TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
-    smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase());
-    //smartHubPosition++;
-    for (int i = 0; i < sensors.length; i++) {
-      final int temp = i;
-      RelativeLayout v = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom, null);
-      itemName = (TextView) v.findViewById(R.id.item_name);
-      itemProgressBar = (TextProgressBar) v.findViewById(R.id.item_progress);
-      final int finalI = i;
-      itemProgressBar.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          callItemDetails(sensors[temp]);
-        }
-      });
-      itemName.setText(sensors[i].getProduct_name());
-      new WebserviceHelper(getActivity().getApplicationContext(), itemProgressBar, "inventory", sensors[0].getProduct_type()).execute("https://aesop.azure-mobile.net/tables/inventory?" +
-          "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
-      customLayout.addView(v);
-    }
     if (sensors.length == 0) {
       noSensorsFound.setVisibility(View.VISIBLE);
-      rootLinearLayout.addView(customLayout, 0);
-
     } else {
       noSensorsFound.setVisibility(View.GONE);
-      rootLinearLayout.addView(customLayout);
-      LinearLayout space = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.space, null);
-      rootLinearLayout.addView(space);
+      Log.d("test2", "sensorsLength: " + sensors.length);
+      sensorsDataListView.setAdapter(new SensorsDataListAdapter(getActivity()));
+      sensorsDataListView.setOnItemClickListener(this);
     }
   }
 
-  private void callItemDetails(Sensor sensor) {
+
+  private void callItemDetails(int position) {
     Intent intent = new Intent(getActivity(), UsageActivity.class);
-    intent.putExtra("productName", sensor.getProduct_name());
-    intent.putExtra("sensorId", sensor.getId());
+    intent.putExtra("productName", sensors[position].getProduct_name());
+    intent.putExtra("sensorId", sensors[position].getId());
     startActivity(intent);
   }
 
+  @Override
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    callItemDetails(position);
+  }
+
+  private class SensorsDataListAdapter extends BaseAdapter {
+    Context context;
+
+    public SensorsDataListAdapter(Context context) {
+      this.context = context;
+    }
+
+    @Override
+    public int getCount() {
+      return sensors.length;
+    }
+
+    @Override
+    public Object getItem(int position) {
+      return sensors[position];
+    }
+
+    @Override
+    public long getItemId(int position) {
+      return 0;
+    }
+
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+      Log.d("test", "position:" + position);
+
+      if (convertView == null) {
+        Log.d("test", "inside null");
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = inflater.inflate(R.layout.sensors_data_list_view_child, parent, false);
+      }
+      TextView itemName = (TextView) convertView.findViewById(R.id.item_name);
+      TextProgressBar itemProgressBar = (TextProgressBar) convertView.findViewById(R.id.item_progress);
+      itemName.setText(sensors[position].getProduct_name());
+      new WebserviceHelper(getActivity().getApplicationContext(), itemProgressBar, "inventory", sensors[0].getProduct_type()).execute("https://aesop.azure-mobile.net/tables/inventory?" +
+          "$filter=(sensor_id+eq+'" + sensors[position].getId() + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
+      return convertView;
+    }
+  }
 }

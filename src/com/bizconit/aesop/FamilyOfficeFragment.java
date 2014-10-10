@@ -67,7 +67,6 @@ public class FamilyOfficeFragment extends Fragment implements Callback {
 
 
   private void getWidgetIds(View view) {
-    rootLinearLayout = (LinearLayout) view.findViewById(R.id.linear);
     inventoryLoading = (ProgressBar) view.findViewById(R.id.inventory_loading);
   }
 
@@ -144,7 +143,7 @@ public class FamilyOfficeFragment extends Fragment implements Callback {
 //    smartHubPosition++;
     for (int i = 0; i < sensors.length; i++) {
       final int temp = i;
-      RelativeLayout v = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom, null);
+      RelativeLayout v = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.sensors_data_list_view_child, null);
       itemName = (TextView) v.findViewById(R.id.item_name);
       itemProgressBar = (TextProgressBar) v.findViewById(R.id.item_progress);
       final int finalI = i;

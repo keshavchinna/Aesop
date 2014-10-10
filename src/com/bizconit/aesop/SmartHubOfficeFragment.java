@@ -1,8 +1,10 @@
 package com.bizconit.aesop;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -15,7 +17,7 @@ import com.google.gson.Gson;
  * Time: 10:30 AM
  * To change this template use File | Settings | File Templates.
  */
-public class SmartHubOfficeFragment extends Fragment implements Callback {
+public class SmartHubOfficeFragment extends Fragment implements Callback, AdapterView.OnItemClickListener {
   private TextView forgotPassword;
   private Button loginButton;
   private TextView showFamilyMembers;
@@ -30,6 +32,8 @@ public class SmartHubOfficeFragment extends Fragment implements Callback {
   private User user;
   private Sensor[] sensors;
   private String userId;
+  private ListView sensorsDataListView;
+  private TextView noSensorsFound;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +55,8 @@ public class SmartHubOfficeFragment extends Fragment implements Callback {
 
 
   private void getWidgetIds(View view) {
-    rootLinearLayout = (LinearLayout) view.findViewById(R.id.linear);
+    sensorsDataListView = (ListView) view.findViewById(R.id.sensors_data_list_view);
+    noSensorsFound = (TextView) view.findViewById(R.id.no_sensors_found);
     inventoryLoading = (ProgressBar) view.findViewById(R.id.inventory_loading);
   }
 
@@ -140,13 +145,13 @@ public class SmartHubOfficeFragment extends Fragment implements Callback {
   }
 
   private void populateInventoryData(final Sensor[] sensors) {
-    LinearLayout customLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom_layout, null);
+   /* LinearLayout customLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom_layout, null);
     TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
     smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase());
     smartHubPosition++;
     for (int i = 0; i < sensors.length; i++) {
       final int temp = i;
-      RelativeLayout v = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom, null);
+      RelativeLayout v = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.sensors_data_list_view_child, null);
       itemName = (TextView) v.findViewById(R.id.item_name);
       itemProgressBar = (TextProgressBar) v.findViewById(R.id.item_progress);
       final int finalI = i;
@@ -163,7 +168,14 @@ public class SmartHubOfficeFragment extends Fragment implements Callback {
     }
     rootLinearLayout.addView(customLayout);
     LinearLayout space = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.space, null);
-    rootLinearLayout.addView(space);
+    rootLinearLayout.addView(space);*/
+    if (sensors.length == 0) {
+      noSensorsFound.setVisibility(View.VISIBLE);
+    } else {
+      noSensorsFound.setVisibility(View.GONE);
+      sensorsDataListView.setAdapter(new OfficeSensorsDataListAdapter(getActivity(), sensors));
+      sensorsDataListView.setOnItemClickListener(this);
+    }
   }
 
   private void callItemDetails(Sensor sensor) {
@@ -173,4 +185,45 @@ public class SmartHubOfficeFragment extends Fragment implements Callback {
     startActivity(intent);
   }
 
+  @Override
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+  }
+
+  private class OfficeSensorsDataListAdapter extends BaseAdapter {
+    Context context;
+    Sensor[] sensors;
+
+    public OfficeSensorsDataListAdapter(FragmentActivity context, Sensor[] sensors) {
+      this.context = context;
+      this.sensors = sensors;
+    }
+
+    @Override
+    public int getCount() {
+      return sensors.length;
+    }
+
+    @Override
+    public Object getItem(int position) {
+      return sensors[position];
+    }
+
+    @Override
+    public long getItemId(int position) {
+      return 0;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+      LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      View view = inflater.inflate(R.layout.sensors_data_list_view_child, null);
+      TextView itemName = (TextView) view.findViewById(R.id.item_name);
+      TextProgressBar itemProgressBar = (TextProgressBar) view.findViewById(R.id.item_progress);
+      itemName.setText(sensors[position].getProduct_name());
+      new WebserviceHelper(getActivity().getApplicationContext(), itemProgressBar, "inventory", sensors[0].getProduct_type()).execute("https://aesop.azure-mobile.net/tables/inventory?" +
+          "$filter=(sensor_id+eq+'" + sensors[position].getId() + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
+      return view;
+    }
+  }
 }

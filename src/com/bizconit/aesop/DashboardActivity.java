@@ -55,7 +55,7 @@ public class DashboardActivity extends Activity implements Callback {
     smartHubPosition++;
     for (int i = 0; i < sensors.length; i++) {
       final int temp = i;
-      RelativeLayout v = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.custom, null);
+      RelativeLayout v = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.sensors_data_list_view_child, null);
       itemName = (TextView) v.findViewById(R.id.item_name);
       itemProgressBar = (TextProgressBar) v.findViewById(R.id.item_progress);
       final int finalI = i;
@@ -77,7 +77,6 @@ public class DashboardActivity extends Activity implements Callback {
 
 
   private void getWidgetIds() {
-    rootLinearLayout = (LinearLayout) findViewById(R.id.linear);
     inventoryLoading = (ProgressBar) findViewById(R.id.inventory_loading);
   }
 
