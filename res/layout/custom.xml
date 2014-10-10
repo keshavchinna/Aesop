@@ -2,9 +2,8 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:paddingTop="4dp"
                 android:background="#e2d8b9"
-                android:paddingBottom="4dp"
+                android:id="@+id/sensor_layout"
                 android:layout_height="wrap_content">
 
     <TextView
@@ -14,10 +13,11 @@
             android:text="Coffee"
             android:maxLines="2"
             android:ems="9"
+            android:layout_centerVertical="true"
             android:textSize="16sp"
             android:layout_alignParentLeft="true"
             android:textColor="@android:color/black"
-            android:padding="4dp"
+            android:padding="8dp"
             android:id="@+id/item_name"/>
     <com.bizconit.aesop.TextProgressBar
             style="?android:attr/progressBarStyleHorizontal"
@@ -27,6 +27,7 @@
             android:max="100"
             android:textSize="16sp"
             android:progress="0"
+            android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
             android:layout_alignParentRight="true"
             android:padding="4dp"

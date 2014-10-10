@@ -30,6 +30,7 @@ public class SmartHubOfficeFragment extends Fragment implements Callback {
   private User user;
   private Sensor[] sensors;
   private String userId;
+  private TextView noSensorsFound;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class SmartHubOfficeFragment extends Fragment implements Callback {
   private void getWidgetIds(View view) {
     rootLinearLayout = (LinearLayout) view.findViewById(R.id.linear);
     inventoryLoading = (ProgressBar) view.findViewById(R.id.inventory_loading);
+    noSensorsFound = (TextView) view.findViewById(R.id.no_sensors_found);
   }
 
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -140,9 +142,9 @@ public class SmartHubOfficeFragment extends Fragment implements Callback {
   }
 
   private void populateInventoryData(final Sensor[] sensors) {
-    LinearLayout customLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom_layout, null);
+    /*LinearLayout customLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom_layout, null);
     TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
-    smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase());
+    smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase());*/
     smartHubPosition++;
     for (int i = 0; i < sensors.length; i++) {
       final int temp = i;
@@ -150,7 +152,7 @@ public class SmartHubOfficeFragment extends Fragment implements Callback {
       itemName = (TextView) v.findViewById(R.id.item_name);
       itemProgressBar = (TextProgressBar) v.findViewById(R.id.item_progress);
       final int finalI = i;
-      itemProgressBar.setOnClickListener(new View.OnClickListener() {
+      v.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
           callItemDetails(sensors[temp]);
@@ -159,11 +161,19 @@ public class SmartHubOfficeFragment extends Fragment implements Callback {
       itemName.setText(sensors[i].getProduct_name());
       new WebserviceHelper(getActivity().getApplicationContext(), itemProgressBar, "inventory", sensors[0].getProduct_type()).execute("https://aesop.azure-mobile.net/tables/inventory?" +
           "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
-      customLayout.addView(v);
+//      customLayout.addView(v);
+      rootLinearLayout.addView(v);
     }
-    rootLinearLayout.addView(customLayout);
-    LinearLayout space = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.space, null);
-    rootLinearLayout.addView(space);
+    if (sensors.length == 0) {
+      noSensorsFound.setVisibility(View.VISIBLE);
+      //  rootLinearLayout.addView(customLayout, 0);
+
+    } else {
+      noSensorsFound.setVisibility(View.GONE);
+//    rootLinearLayout.addView(customLayout);
+    /*LinearLayout space = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.space, null);
+    rootLinearLayout.addView(space);*/
+    }
   }
 
   private void callItemDetails(Sensor sensor) {

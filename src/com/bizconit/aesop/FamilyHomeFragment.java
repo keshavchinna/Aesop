@@ -38,8 +38,8 @@ public class FamilyHomeFragment extends Fragment implements Callback {
     View view = inflater.inflate(R.layout.inventory_dashboard, null);
     getWidgetIds(view);
     setHasOptionsMenu(true);
-    userId =getActivity().getIntent().getStringExtra("userID");
-    userName =getActivity().getIntent().getStringExtra("familyMemberName");
+    userId = getActivity().getIntent().getStringExtra("userID");
+    userName = getActivity().getIntent().getStringExtra("familyMemberName");
     getActivity().getActionBar().setTitle(userName);
     inventoryLoading.setVisibility(View.VISIBLE);
     callSmartHubWebservice(userId);
@@ -143,9 +143,9 @@ public class FamilyHomeFragment extends Fragment implements Callback {
   }
 
   private void populateInventoryData(final Sensor[] sensors) {
-    LinearLayout customLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom_layout, null);
+  /*  LinearLayout customLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom_layout, null);
     TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
-    smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase());
+    smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase());*/
     //smartHubPosition++;
     for (int i = 0; i < sensors.length; i++) {
       final int temp = i;
@@ -153,7 +153,7 @@ public class FamilyHomeFragment extends Fragment implements Callback {
       itemName = (TextView) v.findViewById(R.id.item_name);
       itemProgressBar = (TextProgressBar) v.findViewById(R.id.item_progress);
       final int finalI = i;
-      itemProgressBar.setOnClickListener(new View.OnClickListener() {
+      v.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
           callItemDetails(sensors[temp]);
@@ -162,16 +162,17 @@ public class FamilyHomeFragment extends Fragment implements Callback {
       itemName.setText(sensors[i].getProduct_name());
       new WebserviceHelper(getActivity().getApplicationContext(), itemProgressBar, "inventory", sensors[0].getProduct_type()).execute("https://aesop.azure-mobile.net/tables/inventory?" +
           "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
-      customLayout.addView(v);
+//      customLayout.addView(v);
+      rootLinearLayout.addView(v);
     }
     if (sensors.length == 0) {
       noSensorsFound.setVisibility(View.VISIBLE);
-      rootLinearLayout.addView(customLayout, 0);
+//      rootLinearLayout.addView(customLayout, 0);
     } else {
       noSensorsFound.setVisibility(View.GONE);
-      rootLinearLayout.addView(customLayout);
+     /* rootLinearLayout.addView(customLayout);
       LinearLayout space = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.space, null);
-      rootLinearLayout.addView(space);
+      rootLinearLayout.addView(space);*/
     }
   }
 
