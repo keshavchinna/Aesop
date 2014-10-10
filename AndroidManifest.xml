@@ -32,7 +32,8 @@
         <activity android:name=".GraphActivity"
                   android:screenOrientation="landscape">
         </activity>
-        <activity android:name=".DashBoard">
+        <activity android:name=".DashBoard"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
 </manifest>

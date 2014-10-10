@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -52,6 +54,7 @@ public class DashBoard extends FragmentActivity implements
     mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
     viewPager.setAdapter(mAdapter);
     actionBar.setHomeButtonEnabled(false);
+    actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#B55856")));
     actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
     for (String tab_name : tabs) {
       actionBar.addTab(actionBar.newTab().setText(tab_name)
