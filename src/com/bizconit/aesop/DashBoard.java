@@ -33,13 +33,10 @@ public class DashBoard extends FragmentActivity implements ActionBar.TabListener
     super.onCreate(savedInstanceState);
     setContentView(R.layout.dash_board);
     viewPager = (ViewPager) findViewById(R.id.pager);
-    actionBar = getActionBar();
     user = new Gson().fromJson(getIntent().getStringExtra("user"), Inventory.User.class);
     mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
     viewPager.setAdapter(mAdapter);
-    actionBar.setHomeButtonEnabled(false);
-    actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#B55856")));
-    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+    applyActionbarProperties();
     for (String tab_name : tabs) {
       actionBar.addTab(actionBar.newTab().setText(tab_name)
           .setTabListener(this));
@@ -60,6 +57,14 @@ public class DashBoard extends FragmentActivity implements ActionBar.TabListener
       public void onPageScrollStateChanged(int arg0) {
       }
     });
+  }
+
+  private void applyActionbarProperties() {
+    actionBar = getActionBar();
+    actionBar.setHomeButtonEnabled(true);
+    actionBar.setDisplayHomeAsUpEnabled(true);
+    actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#B55856")));
+    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
   }
 
   @Override
@@ -88,6 +93,9 @@ public class DashBoard extends FragmentActivity implements ActionBar.TabListener
     switch (id) {
       case R.id.family_group:
         callFamilyMembersActivity();
+        break;
+      case android.R.id.home:
+        this.finish();
         break;
     }
     return super.onMenuItemSelected(featureId, item);
