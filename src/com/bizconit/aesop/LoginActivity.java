@@ -3,7 +3,6 @@ package com.bizconit.aesop;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -12,6 +11,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.bizconit.aesop.model.Inventory;
+import com.bizconit.aesop.support.Callback;
+import com.bizconit.aesop.support.WebserviceHelper;
 import com.google.gson.Gson;
 
 public class LoginActivity extends Activity implements Callback {
@@ -52,18 +54,10 @@ public class LoginActivity extends Activity implements Callback {
   @Override
   public void userCallBack(String json) {
     if (json != null) {
-      User[] users = new Gson().fromJson(json, User[].class);
+      Inventory.User[] users = new Gson().fromJson(json, Inventory.User[].class);
       if (users.length > 0) {
-        Intent intent = new Intent(this, DashBoard.class);
-        intent.putExtra("user", new Gson().toJson(users[0]));
-        intent.putExtra("userName", users[0].getName());
-        intent.putExtra("userID", users[0].getId());
-        authentiCationProgressBar.setVisibility(View.GONE);
-        startActivity(intent);
+        callDashboardActivity(users[0]);
       } else {
-        /*Toast toast = Toast.makeText(this, "Please Check Your PIN Number", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();*/
         inputKey.setError("Invalid PIN Number");
         inputKey.setText("");
         authentiCationProgressBar.setVisibility(View.GONE);
@@ -72,6 +66,15 @@ public class LoginActivity extends Activity implements Callback {
       authentiCationProgressBar.setVisibility(View.GONE);
       Toast.makeText(this, "Problem connection to server", Toast.LENGTH_SHORT).show();
     }
+  }
+
+  private void callDashboardActivity(Inventory.User user) {
+    Intent intent = new Intent(this, DashBoard.class);
+    intent.putExtra("user", new Gson().toJson(user));
+    intent.putExtra("userName", user.getName());
+    intent.putExtra("userID", user.getId());
+    authentiCationProgressBar.setVisibility(View.GONE);
+    startActivity(intent);
   }
 
   @Override

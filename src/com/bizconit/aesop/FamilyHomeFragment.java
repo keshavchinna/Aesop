@@ -6,6 +6,11 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import com.bizconit.aesop.model.Inventory;
+import com.bizconit.aesop.model.Sensor;
+import com.bizconit.aesop.model.SmartHub;
+import com.bizconit.aesop.support.Callback;
+import com.bizconit.aesop.support.WebserviceHelper;
 import com.google.gson.Gson;
 
 /**
@@ -16,18 +21,13 @@ import com.google.gson.Gson;
  * To change this template use File | Settings | File Templates.
  */
 public class FamilyHomeFragment extends Fragment implements Callback {
-  private TextView forgotPassword;
-  private Button loginButton;
-  private TextView showFamilyMembers;
   private TextView itemName;
   private TextProgressBar itemProgressBar;
   private SmartHub[] smartHubs;
   private Inventory[] inventories;
   private LinearLayout rootLinearLayout;
   private ProgressBar inventoryLoading;
-  private Menu menu;
   private int smartHubPosition;
-  private User user;
   private Sensor[] sensors;
   private String userId;
   private TextView noSensorsFound;
@@ -75,7 +75,6 @@ public class FamilyHomeFragment extends Fragment implements Callback {
     noSensorsFound = (TextView) view.findViewById(R.id.no_sensors_found);
   }
 
-
   @Override
   public void userCallBack(String o) {
   }
@@ -96,17 +95,19 @@ public class FamilyHomeFragment extends Fragment implements Callback {
           i++;
         }
       } else {
-        Toast toast = Toast.makeText(getActivity(), "No SmartHubs Found", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        showToastMessage("No SmartHubs Found");
         inventoryLoading.setVisibility(View.GONE);
       }
     } else {
       inventoryLoading.setVisibility(View.GONE);
-      Toast toast = Toast.makeText(getActivity(), "Problem Connecting to Server", Toast.LENGTH_SHORT);
-      toast.setGravity(Gravity.CENTER, 0, 0);
-      toast.show();
+      showToastMessage("Problem Connecting to Server");
     }
+  }
+
+  private void showToastMessage(String message) {
+    Toast toast = Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT);
+    toast.setGravity(Gravity.CENTER, 0, 0);
+    toast.show();
   }
 
   @Override
@@ -115,14 +116,10 @@ public class FamilyHomeFragment extends Fragment implements Callback {
       if (!json.isEmpty()) {
         inventories = new Gson().fromJson(json, Inventory[].class);
       } else {
-        Toast toast = Toast.makeText(getActivity(), "No Sensors Found", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        showToastMessage("No Sensors Found");
       }
     } else {
-      Toast toast = Toast.makeText(getActivity(), "Problem Connecting to Server", Toast.LENGTH_SHORT);
-      toast.setGravity(Gravity.CENTER, 0, 0);
-      toast.show();
+      showToastMessage("Problem Connecting to Server");
     }
     inventoryLoading.setVisibility(View.GONE);
   }
@@ -134,19 +131,13 @@ public class FamilyHomeFragment extends Fragment implements Callback {
         sensors = new Gson().fromJson(o, Sensor[].class);
         populateInventoryData(sensors);
       } else {
-        Toast toast = Toast.makeText(getActivity(), "Problem Connecting to Server", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        showToastMessage("Problem Connecting to Server");
       }
       inventoryLoading.setVisibility(View.GONE);
     }
   }
 
   private void populateInventoryData(final Sensor[] sensors) {
-  /*  LinearLayout customLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom_layout, null);
-    TextView smartHubName = (TextView) customLayout.findViewById(R.id.smart_hub_name);
-    smartHubName.setText(smartHubs[smartHubPosition].getName().toUpperCase());*/
-    //smartHubPosition++;
     for (int i = 0; i < sensors.length; i++) {
       final int temp = i;
       RelativeLayout v = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.custom, null);
@@ -162,17 +153,12 @@ public class FamilyHomeFragment extends Fragment implements Callback {
       itemName.setText(sensors[i].getProduct_name());
       new WebserviceHelper(getActivity().getApplicationContext(), itemProgressBar, "inventory", sensors[0].getProduct_type()).execute("https://aesop.azure-mobile.net/tables/inventory?" +
           "$filter=(sensor_id+eq+'" + sensors[i].getId() + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
-//      customLayout.addView(v);
       rootLinearLayout.addView(v);
     }
     if (sensors.length == 0) {
       noSensorsFound.setVisibility(View.VISIBLE);
-//      rootLinearLayout.addView(customLayout, 0);
     } else {
       noSensorsFound.setVisibility(View.GONE);
-     /* rootLinearLayout.addView(customLayout);
-      LinearLayout space = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.space, null);
-      rootLinearLayout.addView(space);*/
     }
   }
 

@@ -1,4 +1,4 @@
-package com.bizconit.aesop;
+package com.bizconit.aesop.support;
 
 /**
  * Created with IntelliJ IDEA.

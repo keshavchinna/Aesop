@@ -3,7 +3,6 @@ package com.bizconit.aesop;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -12,9 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import com.bizconit.aesop.model.Inventory;
 import com.google.gson.Gson;
 
 /**
@@ -24,25 +21,12 @@ import com.google.gson.Gson;
  * Time: 12:17 PM
  * To change this template use File | Settings | File Templates.
  */
-public class DashBoard extends FragmentActivity implements
-    ActionBar.TabListener {
+public class DashBoard extends FragmentActivity implements ActionBar.TabListener {
   private ViewPager viewPager;
   private TabsPagerAdapter mAdapter;
   private ActionBar actionBar;
   private String[] tabs = {"Home", "Office"};
-  private TextView itemName;
-  private TextProgressBar itemProgressBar;
-  private SmartHub[] smartHubs;
-  private Inventory[] inventories;
-  private LinearLayout rootLinearLayout;
-  private ProgressBar inventoryLoading;
-  private Menu menu;
-  private int smartHubPosition;
-  private User user;
-  private Sensor[] sensors;
-  private String userId;
-  private SharedPreferences smartHubPref;
-  private SharedPreferences.Editor editor;
+  private Inventory.User user;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +34,7 @@ public class DashBoard extends FragmentActivity implements
     setContentView(R.layout.dash_board);
     viewPager = (ViewPager) findViewById(R.id.pager);
     actionBar = getActionBar();
-    user = new Gson().fromJson(getIntent().getStringExtra("user"), User.class);
+    user = new Gson().fromJson(getIntent().getStringExtra("user"), Inventory.User.class);
     mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
     viewPager.setAdapter(mAdapter);
     actionBar.setHomeButtonEnabled(false);
@@ -78,7 +62,6 @@ public class DashBoard extends FragmentActivity implements
     });
   }
 
-
   @Override
   public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
   }
@@ -94,7 +77,6 @@ public class DashBoard extends FragmentActivity implements
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    this.menu = menu;
     MenuInflater inflater = new MenuInflater(getBaseContext());
     inflater.inflate(R.menu.dashboard_menu, menu);
     return true;
@@ -104,19 +86,12 @@ public class DashBoard extends FragmentActivity implements
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
     int id = item.getItemId();
     switch (id) {
-      case R.id.refresh:
-        //refreshData();
-        break;
       case R.id.family_group:
         callFamilyMembersActivity();
         break;
     }
-    if (item.getItemId() == R.id.refresh) {
-
-    }
     return super.onMenuItemSelected(featureId, item);
   }
-
 
   private void callFamilyMembersActivity() {
     Intent intent = new Intent(this, FamilyMembersActivity.class);
@@ -128,8 +103,6 @@ public class DashBoard extends FragmentActivity implements
     intent.putExtra("family_members", familyMembers);
     startActivity(intent);
   }
-
-
 }
 
 

@@ -3,9 +3,13 @@ package com.bizconit.aesop;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import com.bizconit.aesop.model.Inventory;
+import com.bizconit.aesop.model.Sensor;
+import com.bizconit.aesop.model.SmartHub;
+import com.bizconit.aesop.support.Callback;
+import com.bizconit.aesop.support.WebserviceHelper;
 import com.google.gson.Gson;
 
 /**
@@ -17,8 +21,6 @@ import com.google.gson.Gson;
  */
 public class DashboardActivity extends Activity implements Callback {
 
-  ListView listView;
-  private TextView showFamilyMembers;
   private TextView itemName;
   private TextProgressBar itemProgressBar;
   private SmartHub[] smartHubs;
@@ -27,7 +29,7 @@ public class DashboardActivity extends Activity implements Callback {
   private ProgressBar inventoryLoading;
   private Menu menu;
   private int smartHubPosition;
-  private User user;
+  private Inventory.User user;
   private Sensor[] sensors;
   private String userId;
 
@@ -36,7 +38,7 @@ public class DashboardActivity extends Activity implements Callback {
     setContentView(R.layout.inventory_dashboard);
     getWidgetIds();
     if (getIntent().getStringExtra("user") != null)
-      user = new Gson().fromJson(getIntent().getStringExtra("user"), User.class);
+      user = new Gson().fromJson(getIntent().getStringExtra("user"), Inventory.User.class);
     getActionBar().setTitle(user.getName());
     userId = getIntent().getStringExtra("userID");
     inventoryLoading.setVisibility(View.VISIBLE);
@@ -75,7 +77,6 @@ public class DashboardActivity extends Activity implements Callback {
     rootLinearLayout.addView(space);
   }
 
-
   private void getWidgetIds() {
     rootLinearLayout = (LinearLayout) findViewById(R.id.linear);
     inventoryLoading = (ProgressBar) findViewById(R.id.inventory_loading);
@@ -107,9 +108,6 @@ public class DashboardActivity extends Activity implements Callback {
         callFamilyMembersActivity();
         break;
     }
-    if (item.getItemId() == R.id.refresh) {
-
-    }
     return super.onMenuItemSelected(featureId, item);
   }
 
@@ -135,57 +133,49 @@ public class DashboardActivity extends Activity implements Callback {
   public void smartHubCallBack(String json) {
     if (json != null) {
       if (!json.isEmpty()) {
-        Log.d("test2", "SmartHUbJson:" + json);
         smartHubs = new Gson().fromJson(json, SmartHub[].class);
         for (SmartHub smartHub : smartHubs) {
-          Log.d("test2", "SmartHub size:" + smartHubs.length);
           new WebserviceHelper(getApplicationContext(), this, "sensor").execute("https://aesop.azure-mobile.net/tables/sensor?" +
               "$filter=(smarthub_id+eq+'" + smartHub.getId() + "')");
         }
       } else {
-        Toast toast = Toast.makeText(this, "No SmartHubs Found", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        showToastMessage("No SmartHubs Found");
         inventoryLoading.setVisibility(View.GONE);
       }
     } else {
       inventoryLoading.setVisibility(View.GONE);
-      Toast toast = Toast.makeText(this, "Problem Connecting to Server", Toast.LENGTH_SHORT);
-      toast.setGravity(Gravity.CENTER, 0, 0);
-      toast.show();
+      showToastMessage("Problem Connecting to Server");
     }
+  }
+
+  private void showToastMessage(String message) {
+    Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+    toast.setGravity(Gravity.CENTER, 0, 0);
+    toast.show();
   }
 
   @Override
   public void inventoryCallBack(String json) {
-    Log.d("test2", "Inventory: " + json.toString());
     if (json != null) {
       if (!json.isEmpty()) {
         inventories = new Gson().fromJson(json, Inventory[].class);
       } else {
-        Toast toast = Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        showToastMessage("No Sensors Found");
       }
     } else {
-      Toast toast = Toast.makeText(this, "Problem Connecting to Server", Toast.LENGTH_SHORT);
-      toast.setGravity(Gravity.CENTER, 0, 0);
-      toast.show();
+      showToastMessage("Problem Connecting to Server");
     }
     inventoryLoading.setVisibility(View.GONE);
   }
 
   @Override
   public void sensorCallBack(String o) {
-    Log.d("test2", "sensor: " + o.toString());
     if (o != null) {
       if (!o.isEmpty()) {
         sensors = new Gson().fromJson(o, Sensor[].class);
         populateInventoryData(sensors);
       } else {
-        Toast toast = Toast.makeText(this, "Problem Connecting to Server", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        showToastMessage("Problem Connecting to Server");
       }
       inventoryLoading.setVisibility(View.GONE);
     }

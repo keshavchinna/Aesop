@@ -1,4 +1,4 @@
-package com.bizconit.aesop;
+package com.bizconit.aesop.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

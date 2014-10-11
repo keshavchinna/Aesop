@@ -12,20 +12,17 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
   @Override
   public Fragment getItem(int index) {
-
     switch (index) {
       case 0:
         return new SmartHubHomeFragment();
       case 1:
         return new SmartHubOfficeFragment();
     }
-
     return null;
   }
 
   @Override
   public int getCount() {
-    // get item count - equal to number of tabs
     return 2;
   }
 

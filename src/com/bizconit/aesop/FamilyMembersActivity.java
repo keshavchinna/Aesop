@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import com.bizconit.aesop.model.Inventory;
+import com.bizconit.aesop.support.Callback;
+import com.bizconit.aesop.support.WebserviceHelper;
 import com.google.gson.Gson;
 
 /**
@@ -17,10 +19,9 @@ import com.google.gson.Gson;
  * To change this template use File | Settings | File Templates.
  */
 public class FamilyMembersActivity extends Activity implements Callback, AdapterView.OnItemClickListener {
-  String[] names = {"Karna", "Rama Krishna", "RK", "Prem"};
   int familyIndex = 0;
   private ListView familyMembersListView;
-  private User[] users;
+  private Inventory.User[] users;
   private TextView name;
   private String[] familyMembersIdsList;
   private String[] familyMembersList;
@@ -42,24 +43,19 @@ public class FamilyMembersActivity extends Activity implements Callback, Adapter
       noFamilyMembers.setVisibility(View.GONE);
       progressBar.setVisibility(View.VISIBLE);
       for (String family_members : familyMembersIdsList) {
-        Log.d("test3", "ids:" + family_members);
         new WebserviceHelper(this, FamilyMembersActivity.this, "user").execute(
             "https://aesop.azure-mobile.net/tables/user?" +
                 "$filter=(id+eq+'" + family_members + "')");
       }
     } else {
-      /*Toast toast = Toast.makeText(this, "No Family Members", Toast.LENGTH_SHORT);
-      toast.setGravity(Gravity.CENTER, 0, 0);
-      toast.show();*/
       noFamilyMembers.setVisibility(View.VISIBLE);
     }
   }
 
   @Override
   public void userCallBack(String json) {
-    Log.d("test3", "json:" + json);
     if (json != null) {
-      users = new Gson().fromJson(json, User[].class);
+      users = new Gson().fromJson(json, Inventory.User[].class);
       if (users.length > 0) {
         userIds[familyIndex] = users[0].getId();
         familyMembersList[familyIndex++] = users[0].getName();
@@ -72,10 +68,14 @@ public class FamilyMembersActivity extends Activity implements Callback, Adapter
       }
     } else {
       progressBar.setVisibility(View.GONE);
-      Toast toast = Toast.makeText(this, "Problem Connecting to Server", Toast.LENGTH_SHORT);
-      toast.setGravity(Gravity.CENTER, 0, 0);
-      toast.show();
+      showToastMessage("Problem Connecting to Server");
     }
+  }
+
+  private void showToastMessage(String message) {
+    Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+    toast.setGravity(Gravity.CENTER, 0, 0);
+    toast.show();
   }
 
   @Override
@@ -108,7 +108,6 @@ public class FamilyMembersActivity extends Activity implements Callback, Adapter
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Intent intent = new Intent(getApplicationContext(), FamilyMemberDataActivity.class);
     intent.putExtra("userID", userIds[position]);
-    Log.d("test7", "userid:" + userIds[position]);
     intent.putExtra("familyMemberName", familyMembersList[position]);
     startActivity(intent);
   }

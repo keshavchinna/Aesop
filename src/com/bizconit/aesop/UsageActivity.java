@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.bizconit.aesop.model.Inventory;
+import com.bizconit.aesop.support.Callback;
+import com.bizconit.aesop.support.WebserviceHelper;
 import com.google.gson.Gson;
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -39,14 +41,18 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
     setContentView(R.layout.usage_view);
     productName = getIntent().getStringExtra("productName");
     getActionBar().setTitle(productName);
+    getWidgets();
+    new WebserviceHelper(getApplicationContext(), this, "productDetails").execute("https://aesop.azure-mobile.net/tables/inventory?" +
+        "$filter=(sensor_id+eq+'" + getIntent().getStringExtra("sensorId") + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
+  }
+
+  private void getWidgets() {
     itemUsageListView = (ListView) findViewById(R.id.item_usage_list_view);
     orderButton = (Button) findViewById(R.id.order_button);
     graphButton = (Button) findViewById(R.id.view_graph);
     noDataFound = (TextView) findViewById(R.id.no_data_found);
     usageDataLoading = (ProgressBar) findViewById(R.id.usage_loading);
     usageDataLoading.setVisibility(View.VISIBLE);
-    new WebserviceHelper(getApplicationContext(), this, "productDetails").execute("https://aesop.azure-mobile.net/tables/inventory?" +
-        "$filter=(sensor_id+eq+'" + getIntent().getStringExtra("sensorId") + "')&__systemProperties=updatedAt&$orderby=inserted_at%20desc");
     orderButton.setOnClickListener(this);
     graphButton.setOnClickListener(this);
   }
@@ -88,7 +94,6 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
 
   @Override
   public void inventoryCallBack(String json) {
-    Log.d("test2", "Inventory: " + json.toString());
     if (json != null && !json.isEmpty()) {
       orderButton.setVisibility(View.VISIBLE);
       inventories = new Gson().fromJson(json, Inventory[].class);
@@ -101,8 +106,6 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
         for (Inventory inventory : inventories) {
           values[i] = inventory.getValue();
           dates[i++] = getDateInString(getPublishedAt(inventory.getInserted_at().replace("Z", "")));
-          /*if (i == 4)
-            break;*/
         }
         itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
       } else {
@@ -113,12 +116,15 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
     } else {
       orderButton.setVisibility(View.GONE);
       usageDataLoading.setVisibility(View.GONE);
-      Toast toast = Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT);
-      toast.setGravity(Gravity.CENTER, 0, 0);
-      toast.show();
+      showToastMessage("No Sensors Found");
     }
   }
-  //inventoryLoading.setVisibility(View.GONE);
+
+  private void showToastMessage(String message) {
+    Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+    toast.setGravity(Gravity.CENTER, 0, 0);
+    toast.show();
+  }
 
   @Override
   public void sensorCallBack(String o) {
@@ -129,7 +135,6 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
     String timeStamp = "";
     try {
       timeStamp = format.format(date);
-
     } catch (Exception e) {
     }
     return timeStamp;
@@ -138,11 +143,9 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
   public java.util.Date getPublishedAt(String str) {
     java.util.Date timeStamp = new Date();
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-    // format.setTimeZone(TimeZone.getTimeZone("IST"));
     try {
       str = str.replace("00:00", "0000");
       timeStamp = format.parse(str);
-
     } catch (Exception e) {
     }
     return timeStamp;
@@ -182,8 +185,6 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
       View view = inflater.inflate(R.layout.usage_child_layout, null);
       TextView date = (TextView) view.findViewById(R.id.date);
       TextView amountPercent = (TextView) view.findViewById(R.id.amount_percent);
-//      date.setText(getPublishedAt(inventories[position].get__updatedAt()) + "");
-      Log.d("test4", "date:" + inventories[position].get__updatedAt());
       date.setText(getDateInString(getPublishedAt(inventories[position].getInserted_at().replace("Z", ""))));
       amountPercent.setText("" + inventories[position].getValue() + "%");
       return view;

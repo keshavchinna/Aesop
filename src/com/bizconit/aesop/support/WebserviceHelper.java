@@ -1,11 +1,15 @@
-package com.bizconit.aesop;
+package com.bizconit.aesop.support;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
+import com.bizconit.aesop.R;
+import com.bizconit.aesop.TextProgressBar;
+import com.bizconit.aesop.model.Inventory;
+import com.bizconit.aesop.support.Callback;
+import com.bizconit.aesop.support.Network;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -45,28 +49,20 @@ public class WebserviceHelper extends AsyncTask {
   @Override
   protected Object doInBackground(Object... params) {
     String url = (String) params[0];
-    Log.d("test2:", "Url: " + url);
     StringBuffer string = new StringBuffer();
     String line = null;
     if (Network.isConnected(context)) {
       try {
-
         HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
-        Log.d("test2:", "after open connection");
         BufferedReader result = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-        Log.d("test2:", "result" + result);
         while ((line = result.readLine()) != null) {
           string.append(line);
         }
         line = new String(string);
-        Log.d("test2:", "line:" + line);
       } catch (Exception e) {
-        Log.d("test2", "error:" + e.getMessage());
-        Log.d("test2", "error:" + e.getCause());
         line = null;
         e.printStackTrace();
       }
-
     } else {
       netWorkConnected = false;
     }
@@ -77,9 +73,7 @@ public class WebserviceHelper extends AsyncTask {
   protected void onPostExecute(Object o) {
     super.onPostExecute(o);
     if (netWorkConnected == false) {
-      Toast toast = Toast.makeText(context, "Please Check Network Connection", Toast.LENGTH_SHORT);
-      toast.setGravity(Gravity.CENTER, 0, 0);
-      toast.show();
+      showToastMessage();
     } else {
       switch (tableName) {
         case "user":
@@ -89,28 +83,7 @@ public class WebserviceHelper extends AsyncTask {
           callback.smartHubCallBack((String) o);
           break;
         case "inventory":
-
-          if ((String) o != null) {
-            if (!((String) o).isEmpty()) {
-              Inventory[] inventories = new Gson().fromJson((String) o, Inventory[].class);
-              if (inventories.length > 0) {
-                Log.d("test3", "sensorValue: " + inventories[0].getValue());
-
-                progressBar.setProgress(inventories[0].getValue());
-                progressBar.setText(inventories[0].getValue() + "%");
-                progressBar.setTextColor(Color.WHITE);
-                /*if (inventories[0].getValue() == 0)
-                  progressBar.setText(inventories[0].getValue() + "%");*/
-                if (productType.equalsIgnoreCase("unit")) {
-                  if (inventories[0].getValue() < 10)
-                    progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.red_color));
-                } else {
-                  if (inventories[0].getValue() < 20)
-                    progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.red_color));
-                }
-              }
-            }
-          }
+          populateData((String) o);
           break;
         case "productDetails":
           callback.inventoryCallBack((String) o);
@@ -118,6 +91,32 @@ public class WebserviceHelper extends AsyncTask {
         case "sensor":
           callback.sensorCallBack((String) o);
           break;
+      }
+    }
+  }
+
+  private void showToastMessage() {
+    Toast toast = Toast.makeText(context, "Please Check Network Connection", Toast.LENGTH_SHORT);
+    toast.setGravity(Gravity.CENTER, 0, 0);
+    toast.show();
+  }
+
+  private void populateData(String o) {
+    if ((String) o != null) {
+      if (!((String) o).isEmpty()) {
+        Inventory[] inventories = new Gson().fromJson((String) o, Inventory[].class);
+        if (inventories.length > 0) {
+          progressBar.setProgress(inventories[0].getValue());
+          progressBar.setText(inventories[0].getValue() + "%");
+          progressBar.setTextColor(Color.WHITE);
+          if (productType.equalsIgnoreCase("unit")) {
+            if (inventories[0].getValue() < 10)
+              progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.red_color));
+          } else {
+            if (inventories[0].getValue() < 20)
+              progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.red_color));
+          }
+        }
       }
     }
   }
