@@ -1,18 +1,17 @@
-package com.bizconit.aesop;
+
+
+package com.bizconit.aesop.activity;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import com.bizconit.aesop.model.Inventory;
-import com.google.gson.Gson;
+import com.bizconit.aesop.support.FamilyTabsPagerAdapter;
+import com.bizconit.aesop.R;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,22 +20,28 @@ import com.google.gson.Gson;
  * Time: 12:17 PM
  * To change this template use File | Settings | File Templates.
  */
-public class DashBoard extends FragmentActivity implements ActionBar.TabListener {
+public class FamilyMemberDataActivity extends FragmentActivity implements
+    ActionBar.TabListener {
   private ViewPager viewPager;
-  private TabsPagerAdapter mAdapter;
+  private FamilyTabsPagerAdapter mAdapter;
   private ActionBar actionBar;
   private String[] tabs = {"Home", "Office"};
-  private Inventory.User user;
+  private Menu menu;
+  private int smartHubPosition;
+  private String userName;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.dash_board);
-    viewPager = (ViewPager) findViewById(R.id.pager);
-    user = new Gson().fromJson(getIntent().getStringExtra("user"), Inventory.User.class);
-    mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+    setContentView(R.layout.show_family_members_data);
+    viewPager = (ViewPager) findViewById(R.id.pager1);
+    actionBar = getActionBar();
+    userName = getIntent().getStringExtra("familyMemberName");
+    getActionBar().setTitle(userName);
+    mAdapter = new FamilyTabsPagerAdapter(getSupportFragmentManager());
     viewPager.setAdapter(mAdapter);
-    applyActionbarProperties();
+    actionBar.setHomeButtonEnabled(false);
+    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
     for (String tab_name : tabs) {
       actionBar.addTab(actionBar.newTab().setText(tab_name)
           .setTabListener(this));
@@ -59,14 +64,6 @@ public class DashBoard extends FragmentActivity implements ActionBar.TabListener
     });
   }
 
-  private void applyActionbarProperties() {
-    actionBar = getActionBar();
-    actionBar.setHomeButtonEnabled(true);
-    actionBar.setDisplayHomeAsUpEnabled(true);
-    actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#B55856")));
-    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-  }
-
   @Override
   public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
   }
@@ -82,8 +79,10 @@ public class DashBoard extends FragmentActivity implements ActionBar.TabListener
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
+    this.menu = menu;
     MenuInflater inflater = new MenuInflater(getBaseContext());
     inflater.inflate(R.menu.dashboard_menu, menu);
+    menu.getItem(0).setVisible(false);
     return true;
   }
 
@@ -91,26 +90,7 @@ public class DashBoard extends FragmentActivity implements ActionBar.TabListener
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
     int id = item.getItemId();
     switch (id) {
-      case R.id.family_group:
-        callFamilyMembersActivity();
-        break;
-      case android.R.id.home:
-        this.finish();
-        break;
     }
     return super.onMenuItemSelected(featureId, item);
   }
-
-  private void callFamilyMembersActivity() {
-    Intent intent = new Intent(this, FamilyMembersActivity.class);
-    String[] familyMembers = null;
-    if (user.getFamily_members() != null) {
-      familyMembers = user.getFamily_members().split(",");
-    } else
-      familyMembers = new String[0];
-    intent.putExtra("family_members", familyMembers);
-    startActivity(intent);
-  }
 }
-
-

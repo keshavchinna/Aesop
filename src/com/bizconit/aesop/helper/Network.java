@@ -1,4 +1,4 @@
-package com.bizconit.aesop.support;
+package com.bizconit.aesop.helper;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

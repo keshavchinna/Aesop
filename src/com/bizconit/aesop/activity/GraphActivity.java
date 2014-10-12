@@ -1,4 +1,4 @@
-package com.bizconit.aesop;
+package com.bizconit.aesop.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.*;
+import com.bizconit.aesop.R;
 import com.google.gson.Gson;
 import com.jjoe64.graphview.*;
 

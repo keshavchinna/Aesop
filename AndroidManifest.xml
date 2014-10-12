@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application android:label="@string/app_name" android:icon="@drawable/bizcon_icon"
                  android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
-        <activity android:name=".LoginActivity"
+        <activity android:name=".activity.LoginActivity"
                   android:label="@string/app_name"
                   android:screenOrientation="portrait"
                   android:noHistory="true">
@@ -17,18 +17,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".DashboardActivity" android:screenOrientation="portrait">
+        <activity android:name=".activity.FamilyMembersActivity" android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".FamilyMembersActivity" android:screenOrientation="portrait">
+        <activity android:name=".activity.UsageActivity" android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".UsageActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".AvailablePortalsActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".FamilyMemberDataActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".GraphActivity"
+        <activity android:name=".activity.AvailablePortalsActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.FamilyMemberDataActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.GraphActivity"
                   android:screenOrientation="landscape">
         </activity>
-        <activity android:name=".DashBoard"
+        <activity android:name=".activity.DashBoardActivity"
                   android:screenOrientation="portrait">
         </activity>
     </application>

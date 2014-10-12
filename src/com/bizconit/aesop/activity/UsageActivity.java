@@ -1,4 +1,4 @@
-package com.bizconit.aesop;
+package com.bizconit.aesop.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,9 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.bizconit.aesop.R;
+import com.bizconit.aesop.activity.AvailablePortalsActivity;
+import com.bizconit.aesop.activity.GraphActivity;
 import com.bizconit.aesop.model.Inventory;
-import com.bizconit.aesop.support.Callback;
-import com.bizconit.aesop.support.WebserviceHelper;
+import com.bizconit.aesop.helper.Callback;
+import com.bizconit.aesop.helper.WebserviceHelper;
 import com.google.gson.Gson;
 import org.ocpsoft.prettytime.PrettyTime;
 

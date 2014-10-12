@@ -19,7 +19,7 @@
             android:textColor="@android:color/black"
             android:padding="8dp"
             android:id="@+id/item_name"/>
-    <com.bizconit.aesop.TextProgressBar
+    <com.bizconit.aesop.helper.TextProgressBar
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="150dp"
             android:layout_height="wrap_content"

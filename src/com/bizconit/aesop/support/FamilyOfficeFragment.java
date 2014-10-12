@@ -1,15 +1,18 @@
-package com.bizconit.aesop;
+package com.bizconit.aesop.support;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.*;
 import android.widget.*;
+import com.bizconit.aesop.R;
+import com.bizconit.aesop.activity.UsageActivity;
+import com.bizconit.aesop.helper.TextProgressBar;
 import com.bizconit.aesop.model.Inventory;
 import com.bizconit.aesop.model.Sensor;
 import com.bizconit.aesop.model.SmartHub;
-import com.bizconit.aesop.support.Callback;
-import com.bizconit.aesop.support.WebserviceHelper;
+import com.bizconit.aesop.helper.Callback;
+import com.bizconit.aesop.helper.WebserviceHelper;
 import com.google.gson.Gson;
 
 /**
