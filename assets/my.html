@@ -6,7 +6,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="http://static.pureexample.com/js/flot/excanvas.min.js"></script>
     <script src="http://static.pureexample.com/js/flot/jquery.flot.min.js"></script>
-
+    <script src="jquery.flot.axislabels.js"></script>
     <!-- CSS -->
     <style type="text/css">
         #flotcontainer {
@@ -27,6 +27,19 @@
             data7_1 = JSON.parse(data);
             data7_2 = JSON.parse(data1);
             $(function () {
+                var options = {
+                    xaxis: {
+                        axisLabel: 'Dates',
+                        axisLabelUseCanvas: true,
+                        axisLabelFontSizePixels: 20,
+                        axisLabelFontFamily: 'Arial'
+                    },
+                    yaxis: {
+                        axisLabel: 'Percentage',
+                        axisLabelUseCanvas: true,
+                        axisLabelPadding: 10
+                    }
+                };
                 $.plot($("#flotcontainer"),
                         [
                             {
@@ -50,13 +63,19 @@
                             xaxis: {
                                 mode: "number",
                                 min: "0",
-                                max: "10"
+                                max: "10",
+                                axisLabel: 'Dates',
+                                axisLabelUseCanvas: true
                             },
                             yaxes: [
                                 {
                                     /* First y axis */
+
                                     min: "0",
-                                    max: "100"
+                                    max: "100",
+                                    axisLabel: 'Percentage',
+                                    axisLabelUseCanvas: true,
+                                    axisLabelPadding: 10
                                 },
                                 {
                                     /* Second y axis */

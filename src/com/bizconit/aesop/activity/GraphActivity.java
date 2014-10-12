@@ -43,8 +43,8 @@ public class GraphActivity extends Activity {
         Application application = getApplication();
         webView.addJavascriptInterface(application, "android");
         ((ArrayApplication) application).setActivity(this);
-        String s = ((ArrayApplication) application).a1dToJson(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, new int[]{45, 87, 32, 85, 75, 41, 36, 87, 25, 65});
-        String s1 = ((ArrayApplication) application).a1dToJson(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, new int[]{40, 25, 86, 32, 45, 20, 92, 56, 95, 50});
+        String s = ((ArrayApplication) application).a1dToJson(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, values);
+        String s1 = ((ArrayApplication) application).a1dToJson(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, new int[]{40, 25, 86, 32, 45, 20, 92, 56, 95, 50,74});
         Log.d("test2", "String S: " + s);
         try {
             ((ArrayApplication) application).setData(s);
