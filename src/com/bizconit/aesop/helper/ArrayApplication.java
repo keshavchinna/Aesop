@@ -10,100 +10,139 @@ import org.json.JSONException;
 
 public class ArrayApplication extends Application {
 
-    static final String TAG = "JavascriptDataDemo";
+  static final String TAG = "JavascriptDataDemo";
 
-    int[] data = new int[11];
-    int[] data1 = new int[11];
-    int[] data3 = new int[11];
-    int[] data2 = new int[]{11};
+  int[] inventoryXaxis;
+  int[] inventoryYaxis;
+  int[] consumptionYaxis;
+  int[] consumptionXaxis;
+  int[] xAxisValues;
+  String[] xAxisLabels;
 
-    /**
-     * This passes our data out to the JS
-     */
-    @JavascriptInterface
-    public String getData1() {
-        Log.d(TAG, "getData() called");
-        return a1dToJson(data2, data3).toString();
+  /**
+   * This passes our inventoryXaxis out to the JS
+   */
+  @JavascriptInterface
+  public String getConsumtionData() {
+    Log.d(TAG, "getConsumtionData() called");
+    return arraysToJson(consumptionXaxis, consumptionYaxis).toString();
+  }
+
+  @JavascriptInterface
+  public String getInventoryData() {
+    Log.d(TAG, "getInventoryData() called");
+    return arraysToJson(inventoryXaxis, inventoryYaxis).toString();
+  }
+
+  @JavascriptInterface
+  public String getXaxisLabels() {
+    Log.d(TAG, "getXaxisLabels() called");
+    return setXaxisLabelsToJson(xAxisValues, xAxisLabels).toString();
+
+  }
+
+  /**
+   * Allow the JavaScript to pass some inventoryXaxis in to us.
+   */
+  @JavascriptInterface
+  public void setInventoryData(String newData) throws JSONException {
+    Log.d(TAG, "MainActivity.setInventoryData()");
+    JSONArray streamer = new JSONArray(newData);
+    inventoryXaxis = new int[streamer.length()];
+    inventoryYaxis = new int[streamer.length()];
+    for (int i = 0; i < streamer.length(); i++) {
+      String n = streamer.getString(i);
+      String[] sarray = n.replace("[", "").replace("]", "").split(",");
+      inventoryXaxis[i] = Integer.parseInt(sarray[0]);
+      inventoryYaxis[i] = Integer.parseInt(sarray[1]);
     }
+  }
 
-    @JavascriptInterface
-    public String getData() {
-        Log.d(TAG, "getData() called");
-        return a1dToJson(data, data1).toString();
+  @JavascriptInterface
+  public void setConsumptionData(String newData) throws JSONException {
+    Log.d(TAG, "MainActivity.setConsumptionData()");
+    JSONArray streamer = new JSONArray(newData);
+    consumptionXaxis = new int[streamer.length()];
+    consumptionYaxis = new int[streamer.length()];
+    for (int i = 0; i < streamer.length(); i++) {
+      String n = streamer.getString(i);
+      String[] sarray = n.replace("[", "").replace("]", "").split(",");
+      consumptionXaxis[i] = Integer.parseInt(sarray[0]);
+      consumptionYaxis[i] = Integer.parseInt(sarray[1]);
     }
+  }
 
-    /**
-     * Allow the JavaScript to pass some data in to us.
-     */
-    @JavascriptInterface
-    public void setData(String newData) throws JSONException {
-        Log.d("test2", newData);
-        Log.d(TAG, "MainActivity.setData()");
-        JSONArray streamer = new JSONArray(newData);
-        data = new int[streamer.length()];
-        data1 = new int[streamer.length()];
-        for (int i = 0; i < streamer.length(); i++) {
-            String n = streamer.getString(i);
-            String[] sarray = n.replace("[", "").replace("]", "").split(",");
-            data[i] = Integer.parseInt(sarray[0]);
-            data1[i] = Integer.parseInt(sarray[1]);
-        }
+  @JavascriptInterface
+  public void setXaxisLabelsData(String newData) throws JSONException {
+    Log.d("test2", newData);
+    Log.d(TAG, "MainActivity.setXaxisLabelsData()");
+    JSONArray streamer = new JSONArray(newData);
+    xAxisValues = new int[streamer.length()];
+    xAxisLabels = new String[streamer.length()];
+    for (int i = 0; i < streamer.length(); i++) {
+      String n = streamer.getString(i);
+      String[] sarray = n.replace("[", "").replace("]", "").split(",");
+      xAxisValues[i] = Integer.parseInt(sarray[0]);
+      xAxisLabels[i] = sarray[1];
     }
+  }
 
-    @JavascriptInterface
-    public void setData1(String newData) throws JSONException {
-        Log.d("test2", newData);
-        Log.d(TAG, "MainActivity.setData()");
-        JSONArray streamer = new JSONArray(newData);
-        data2 = new int[streamer.length()];
-        data3 = new int[streamer.length()];
-        for (int i = 0; i < streamer.length(); i++) {
-            String n = streamer.getString(i);
-            String[] sarray = n.replace("[", "").replace("]", "").split(",");
-            data2[i] = Integer.parseInt(sarray[0]);
-            data3[i] = Integer.parseInt(sarray[1]);
-        }
+  private Activity activity;
+
+  public Context getActivity() {
+    return activity;
+  }
+
+  public void setActivity(Activity app) {
+    this.activity = app;
+  }
+
+  @JavascriptInterface
+  public void finish() {
+    Log.d(TAG, "ArrayApplication.finish()");
+    activity.finish();
+  }
+
+  /**
+   * Sorry for not using the standard org.json.JSONArray but even in Android 4.2 it lacks
+   * the JSONArray(Object[]) constructor, making it too painful to use.
+   *
+   * @param xaxisValues
+   * @param yaxisValues
+   */
+  public String arraysToJson(int[] xaxisValues, int[] yaxisValues) {
+    StringBuffer jsonData = new StringBuffer();
+    jsonData.append("[");
+    for (int i = 0; i < xaxisValues.length; i++) {
+      jsonData.append("[");
+      int d = xaxisValues[i];
+      int d1 = yaxisValues[i];
+      jsonData.append(d);
+      jsonData.append(",");
+      jsonData.append(d1);
+      jsonData.append("]");
+      if ((i + 1) < xaxisValues.length)
+        jsonData.append(",");
     }
+    jsonData.append("]");
+    return jsonData.toString();
+  }
 
-    private Activity activity;
-
-    public Context getActivity() {
-        return activity;
+  public String setXaxisLabelsToJson(int[] xaxisValues, String[] xaxisLabels) {
+    StringBuffer jsonData = new StringBuffer();
+    jsonData.append("[");
+    for (int i = 0; i < xaxisValues.length; i++) {
+      jsonData.append("[");
+      int d = xaxisValues[i];
+      String d1 = xaxisLabels[i];
+      jsonData.append(d);
+      jsonData.append(",");
+      jsonData.append(d1);
+      jsonData.append("]");
+      if ((i + 1) < xaxisValues.length)
+        jsonData.append(",");
     }
-
-    public void setActivity(Activity app) {
-        this.activity = app;
-    }
-
-    @JavascriptInterface
-    public void finish() {
-        Log.d(TAG, "ArrayApplication.finish()");
-        activity.finish();
-    }
-
-    /**
-     * Sorry for not using the standard org.json.JSONArray but even in Android 4.2 it lacks
-     * the JSONArray(Object[]) constructor, making it too painful to use.
-     *
-     * @param data
-     * @param doubles
-     */
-    public String a1dToJson(int[] data, int[] doubles) {
-        StringBuffer sb = new StringBuffer();
-        sb.append("[");
-        for (int i = 0; i < doubles.length; i++) {
-            sb.append("[");
-            int d = data[i];
-            int d1 = doubles[i];
-
-            sb.append(d);
-            sb.append(",");
-            sb.append(d1);
-            sb.append("]");
-            if ((i + 1) < doubles.length)
-                sb.append(",");
-        }
-        sb.append("]");
-        return sb.toString();
-    }
+    jsonData.append("]");
+    return jsonData.toString();
+  }
 }

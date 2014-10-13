@@ -10,11 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.bizconit.aesop.R;
-import com.bizconit.aesop.activity.AvailablePortalsActivity;
-import com.bizconit.aesop.activity.GraphActivity;
-import com.bizconit.aesop.model.Inventory;
 import com.bizconit.aesop.helper.Callback;
 import com.bizconit.aesop.helper.WebserviceHelper;
+import com.bizconit.aesop.model.Inventory;
 import com.google.gson.Gson;
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -107,7 +105,9 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
         values = new int[size];
         dates = new String[size];
         for (Inventory inventory : inventories) {
-          values[i] = inventory.getValue();
+          int percentage = (int) (100 * inventory.getValue() / 1000);
+          values[i] = percentage;
+//          dates[i++] =Long.parseLong( getPublishedAt(inventory.getInserted_at().replace("Z", "")));
           dates[i++] = getDateInString(getPublishedAt(inventory.getInserted_at().replace("Z", "")));
         }
         itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
@@ -134,7 +134,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
   }
 
   public String getDateInString(java.util.Date date) {
-    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
+    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy");
     String timeStamp = "";
     try {
       timeStamp = format.format(date);
@@ -149,6 +149,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
     try {
       str = str.replace("00:00", "0000");
       timeStamp = format.parse(str);
+
     } catch (Exception e) {
     }
     return timeStamp;

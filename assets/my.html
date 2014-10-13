@@ -7,11 +7,12 @@
     <script src="http://static.pureexample.com/js/flot/excanvas.min.js"></script>
     <script src="http://static.pureexample.com/js/flot/jquery.flot.min.js"></script>
     <script src="jquery.flot.axislabels.js"></script>
+    <script src="jquery.flot.js"></script>
     <!-- CSS -->
     <style type="text/css">
         #flotcontainer {
             width: 600px;
-            height: 200px;
+            height: 300px;
             text-align: center;
             margin: 0 auto;
         }
@@ -19,27 +20,17 @@
     <!-- Javascript -->
     <script type="text/javascript">
         var data7_1;
-
         var data7_2;
+        var datar;
+
         var showData = function () {
-            var data = android.getData();
-            var data1 = android.getData1();
+            var data = android.getInventoryData();
+            var data1 = android.getConsumtionData();
+            var data2 = android.getXaxisLabels();
+            datar = JSON.parse(data2);
             data7_1 = JSON.parse(data);
             data7_2 = JSON.parse(data1);
             $(function () {
-                var options = {
-                    xaxis: {
-                        axisLabel: 'Dates',
-                        axisLabelUseCanvas: true,
-                        axisLabelFontSizePixels: 20,
-                        axisLabelFontFamily: 'Arial'
-                    },
-                    yaxis: {
-                        axisLabel: 'Percentage',
-                        axisLabelUseCanvas: true,
-                        axisLabelPadding: 10
-                    }
-                };
                 $.plot($("#flotcontainer"),
                         [
                             {
@@ -58,14 +49,29 @@
                         ],
                         {
                             grid: {
-                                backgroundColor: { colors: ["#D1D1D1", "#7A7A7A"] }
+                                backgroundColor: { colors: ["#D1D1D1", "#7A7A7A"] },
+                                hoverable: true,
+                                borderWidth: 2,
+                                pan: {
+
+                                    interactive: true
+                                },
+                                zoom: {
+
+                                    interactive: true
+                                }
                             },
                             xaxis: {
-                                mode: "number",
-                                min: "0",
-                                max: "10",
+                                mode: "string",
                                 axisLabel: 'Dates',
-                                axisLabelUseCanvas: true
+                                axisLabelUseCanvas: true,
+                                ticks: datar,
+                                font: { size: 15, style: "italic", weight: "bold", family: "sans-serif", variant: "small-caps" },
+                                labelAngle: 45,
+                                axisLabelFontSizePixels: 25,
+                                labelWidth: 100,
+                                show: true
+
                             },
                             yaxes: [
                                 {
@@ -75,13 +81,25 @@
                                     max: "100",
                                     axisLabel: 'Percentage',
                                     axisLabelUseCanvas: true,
-                                    axisLabelPadding: 10
+                                    axisLabelPadding: 10,
+                                    tickSize: 10,
+                                    axisLabelFontSizePixels: 20
                                 },
                                 {
                                     /* Second y axis */
-                                    position: "right"  /* left or right */
+                                    position: "right",
+                                    /* left or right */
+                                    tickSize: 10
                                 }
-                            ]
+                            ],
+                            pan: {
+
+                                interactive: true
+                            },
+                            zoom: {
+
+                                interactive: true
+                            }
                         }
                 );
             });

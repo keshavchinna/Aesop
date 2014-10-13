@@ -19,11 +19,33 @@ public class Inventory {
   @Expose
   private String __updatedAt;
   @Expose
-  private int value;
+  private float value;
   @Expose
   private String product_name;
   @Expose
   private String product_type;
+  @Expose
+  private String weight;
+  @Expose
+  private float temperature;
+
+  public String getWeight() {
+    return weight;
+  }
+
+  public void setWeight(String weight) {
+    this.weight = weight;
+  }
+
+
+  public float getTemperature() {
+    return temperature;
+  }
+
+  public void setTemperature(float temperature) {
+    this.temperature = temperature;
+  }
+
 
   public String getInserted_at() {
     return inserted_at;
@@ -71,11 +93,11 @@ public class Inventory {
     this.smarthub_id = smarthub_id;
   }
 
-  public int getValue() {
+  public float getValue() {
     return value;
   }
 
-  public void setValue(int value) {
+  public void setValue(float value) {
     this.value = value;
   }
 
