@@ -100,16 +100,7 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
       inventories = new Gson().fromJson(json, Inventory[].class);
       if (inventories.length > 0) {
         usageDataLoading.setVisibility(View.GONE);
-        int i = 0;
-        int size = inventories.length;
-        values = new int[size];
-        dates = new String[size];
-        for (Inventory inventory : inventories) {
-          int percentage = (int) (100 * inventory.getValue() / 1000);
-          values[i] = percentage;
-//          dates[i++] =Long.parseLong( getPublishedAt(inventory.getInserted_at().replace("Z", "")));
-          dates[i++] = getDateInString(getPublishedAt(inventory.getInserted_at().replace("Z", "")));
-        }
+        getInventoryData();
         itemUsageListView.setAdapter(new ItemUsageListAdapter(getApplicationContext()));
       } else {
         usageDataLoading.setVisibility(View.GONE);
@@ -120,6 +111,18 @@ public class UsageActivity extends Activity implements View.OnClickListener, Cal
       orderButton.setVisibility(View.GONE);
       usageDataLoading.setVisibility(View.GONE);
       showToastMessage("No Sensors Found");
+    }
+  }
+
+  private void getInventoryData() {
+    int i = 0;
+    int size = inventories.length;
+    values = new int[size];
+    dates = new String[size];
+    for (Inventory inventory : inventories) {
+      int percentage = (int) (100 * inventory.getValue() / 1000);
+      values[i] = percentage;
+      dates[i++] = getDateInString(getPublishedAt(inventory.getInserted_at().replace("Z", "")));
     }
   }
 

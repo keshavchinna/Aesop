@@ -80,7 +80,7 @@ public class WebserviceHelper extends AsyncTask {
           callback.smartHubCallBack((String) o);
           break;
         case "inventory":
-          populateData((String) o);
+          populateProgressBarData((String) o);
           break;
         case "productDetails":
           callback.inventoryCallBack((String) o);
@@ -98,7 +98,7 @@ public class WebserviceHelper extends AsyncTask {
     toast.show();
   }
 
-  private void populateData(String o) {
+  private void populateProgressBarData(String o) {
     if ((String) o != null) {
       if (!((String) o).isEmpty()) {
         Inventory[] inventories = new Gson().fromJson((String) o, Inventory[].class);

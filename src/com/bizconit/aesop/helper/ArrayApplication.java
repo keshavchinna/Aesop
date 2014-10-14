@@ -3,7 +3,6 @@ package com.bizconit.aesop.helper;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,7 +10,6 @@ import org.json.JSONException;
 public class ArrayApplication extends Application {
 
   static final String TAG = "JavascriptDataDemo";
-
   int[] inventoryXaxis;
   int[] inventoryYaxis;
   int[] consumptionYaxis;
@@ -19,34 +17,24 @@ public class ArrayApplication extends Application {
   int[] xAxisValues;
   String[] xAxisLabels;
 
-  /**
-   * This passes our inventoryXaxis out to the JS
-   */
   @JavascriptInterface
-  public String getConsumtionData() {
-    Log.d(TAG, "getConsumtionData() called");
+  public String getConsumptionData() {
     return arraysToJson(consumptionXaxis, consumptionYaxis).toString();
   }
 
   @JavascriptInterface
   public String getInventoryData() {
-    Log.d(TAG, "getInventoryData() called");
     return arraysToJson(inventoryXaxis, inventoryYaxis).toString();
   }
 
   @JavascriptInterface
   public String getXaxisLabels() {
-    Log.d(TAG, "getXaxisLabels() called");
     return setXaxisLabelsToJson(xAxisValues, xAxisLabels).toString();
 
   }
 
-  /**
-   * Allow the JavaScript to pass some inventoryXaxis in to us.
-   */
   @JavascriptInterface
   public void setInventoryData(String newData) throws JSONException {
-    Log.d(TAG, "MainActivity.setInventoryData()");
     JSONArray streamer = new JSONArray(newData);
     inventoryXaxis = new int[streamer.length()];
     inventoryYaxis = new int[streamer.length()];
@@ -60,7 +48,6 @@ public class ArrayApplication extends Application {
 
   @JavascriptInterface
   public void setConsumptionData(String newData) throws JSONException {
-    Log.d(TAG, "MainActivity.setConsumptionData()");
     JSONArray streamer = new JSONArray(newData);
     consumptionXaxis = new int[streamer.length()];
     consumptionYaxis = new int[streamer.length()];
@@ -74,8 +61,6 @@ public class ArrayApplication extends Application {
 
   @JavascriptInterface
   public void setXaxisLabelsData(String newData) throws JSONException {
-    Log.d("test2", newData);
-    Log.d(TAG, "MainActivity.setXaxisLabelsData()");
     JSONArray streamer = new JSONArray(newData);
     xAxisValues = new int[streamer.length()];
     xAxisLabels = new String[streamer.length()];
@@ -99,7 +84,6 @@ public class ArrayApplication extends Application {
 
   @JavascriptInterface
   public void finish() {
-    Log.d(TAG, "ArrayApplication.finish()");
     activity.finish();
   }
 
@@ -115,11 +99,11 @@ public class ArrayApplication extends Application {
     jsonData.append("[");
     for (int i = 0; i < xaxisValues.length; i++) {
       jsonData.append("[");
-      int d = xaxisValues[i];
-      int d1 = yaxisValues[i];
-      jsonData.append(d);
+      int key = xaxisValues[i];
+      int value = yaxisValues[i];
+      jsonData.append(key);
       jsonData.append(",");
-      jsonData.append(d1);
+      jsonData.append(value);
       jsonData.append("]");
       if ((i + 1) < xaxisValues.length)
         jsonData.append(",");
@@ -133,11 +117,11 @@ public class ArrayApplication extends Application {
     jsonData.append("[");
     for (int i = 0; i < xaxisValues.length; i++) {
       jsonData.append("[");
-      int d = xaxisValues[i];
-      String d1 = xaxisLabels[i];
-      jsonData.append(d);
+      int key = xaxisValues[i];
+      String value = xaxisLabels[i];
+      jsonData.append(key);
       jsonData.append(",");
-      jsonData.append(d1);
+      jsonData.append(value);
       jsonData.append("]");
       if ((i + 1) < xaxisValues.length)
         jsonData.append(",");

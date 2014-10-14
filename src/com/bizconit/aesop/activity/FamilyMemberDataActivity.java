@@ -35,19 +35,26 @@ public class FamilyMemberDataActivity extends FragmentActivity implements
     super.onCreate(savedInstanceState);
     setContentView(R.layout.show_family_members_data);
     viewPager = (ViewPager) findViewById(R.id.pager1);
-    actionBar = getActionBar();
     userName = getIntent().getStringExtra("familyMemberName");
-    getActionBar().setTitle(userName);
     mAdapter = new FamilyTabsPagerAdapter(getSupportFragmentManager());
     viewPager.setAdapter(mAdapter);
+    setActionBarProperties();
+    viewPager.setOnPageChangeListener(getListener());
+  }
+
+  private void setActionBarProperties() {
+    actionBar = getActionBar();
     actionBar.setHomeButtonEnabled(false);
+    actionBar.setTitle(userName);
     actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
     for (String tab_name : tabs) {
       actionBar.addTab(actionBar.newTab().setText(tab_name)
           .setTabListener(this));
     }
+  }
 
-    viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+  private ViewPager.OnPageChangeListener getListener() {
+    return new ViewPager.OnPageChangeListener() {
 
       @Override
       public void onPageSelected(int position) {
@@ -61,7 +68,7 @@ public class FamilyMemberDataActivity extends FragmentActivity implements
       @Override
       public void onPageScrollStateChanged(int arg0) {
       }
-    });
+    };
   }
 
   @Override

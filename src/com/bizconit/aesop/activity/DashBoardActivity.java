@@ -44,7 +44,11 @@ public class DashBoardActivity extends FragmentActivity implements ActionBar.Tab
           .setTabListener(this));
     }
 
-    viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+    viewPager.setOnPageChangeListener(getListener());
+  }
+
+  private ViewPager.OnPageChangeListener getListener() {
+    return new ViewPager.OnPageChangeListener() {
 
       @Override
       public void onPageSelected(int position) {
@@ -58,7 +62,7 @@ public class DashBoardActivity extends FragmentActivity implements ActionBar.Tab
       @Override
       public void onPageScrollStateChanged(int arg0) {
       }
-    });
+    };
   }
 
   private void applyActionbarProperties() {

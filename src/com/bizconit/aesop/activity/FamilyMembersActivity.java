@@ -33,24 +33,32 @@ public class FamilyMembersActivity extends Activity implements Callback, Adapter
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.family_members_layout);
-    familyMembersListView = (ListView) findViewById(R.id.family_members_listView);
-    noFamilyMembers = (TextView) findViewById(R.id.no_family_members);
-    progressBar = (ProgressBar) findViewById(R.id.family_loading);
-    getActionBar().setTitle("Family Members");
-    familyMembersIdsList = getIntent().getStringArrayExtra("family_members");
+    getWidgets();
     familyMembersList = new String[familyMembersIdsList.length];
     userIds = new String[familyMembersIdsList.length];
     if (familyMembersIdsList != null && familyMembersIdsList.length > 0) {
       noFamilyMembers.setVisibility(View.GONE);
       progressBar.setVisibility(View.VISIBLE);
-      for (String family_members : familyMembersIdsList) {
-        new WebserviceHelper(this, FamilyMembersActivity.this, "user").execute(
-            "https://aesop.azure-mobile.net/tables/user?" +
-                "$filter=(id+eq+'" + family_members + "')");
-      }
+      callForFamilyMembers();
     } else {
       noFamilyMembers.setVisibility(View.VISIBLE);
     }
+  }
+
+  private void callForFamilyMembers() {
+    for (String family_members : familyMembersIdsList) {
+      new WebserviceHelper(this, FamilyMembersActivity.this, "user").execute(
+          "https://aesop.azure-mobile.net/tables/user?" +
+              "$filter=(id+eq+'" + family_members + "')");
+    }
+  }
+
+  private void getWidgets() {
+    familyMembersListView = (ListView) findViewById(R.id.family_members_listView);
+    noFamilyMembers = (TextView) findViewById(R.id.no_family_members);
+    progressBar = (ProgressBar) findViewById(R.id.family_loading);
+    getActionBar().setTitle("Family Members");
+    familyMembersIdsList = getIntent().getStringArrayExtra("family_members");
   }
 
   @Override
