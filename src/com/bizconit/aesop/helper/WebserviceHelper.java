@@ -108,10 +108,10 @@ public class WebserviceHelper extends AsyncTask {
           progressBar.setText(percentage + "%");
           progressBar.setTextColor(Color.WHITE);
           if (productType.equalsIgnoreCase("unit")) {
-            if (inventories[0].getValue() < 10)
+            if (percentage < 10)
               progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.red_color));
           } else {
-            if (inventories[0].getValue() < 20)
+            if (percentage < 20)
               progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.red_color));
           }
         }
